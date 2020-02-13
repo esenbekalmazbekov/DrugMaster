@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/activityBackround"
+    tools:context=".MainActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/activityBackround"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/UserLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30sp"
+                android:layout_marginTop="20sp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/rename"
+                android:inputType="textPersonName"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="#e80966"
+                android:textColorLink="#e80966"
+                tools:ignore="LabelFor,UnusedAttribute" />
+
+            <EditText
+                android:id="@+id/userPassoword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30sp"
+                android:layout_marginTop="20sp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="#e80966"
+                android:textColorLink="#e80966"
+                tools:ignore="LabelFor,UnusedAttribute" />
+
+            <EditText
+                android:id="@+id/userPassowordRewrite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30sp"
+                android:layout_marginTop="20sp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/repass"
+                android:inputType="textPassword"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="#e80966"
+                android:textColorLink="#e80966"
+                tools:ignore="LabelFor,UnusedAttribute" />
+
+            <EditText
+                android:id="@+id/userEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30sp"
+                android:layout_marginTop="20sp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/email_gmail"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="#e80966"
+                android:textColorLink="#e80966"
+                tools:ignore="LabelFor,UnusedAttribute" />
+
+            <EditText
+                android:id="@+id/phoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30sp"
+                android:layout_marginTop="20sp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/phone"
+                android:inputType="phone"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="#e80966"
+                android:textColorLink="#e80966"
+                tools:ignore="LabelFor,UnusedAttribute" />
+
+
+            <EditText
+                android:id="@+id/location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30sp"
+                android:layout_marginTop="20sp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/fisical_address"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="#e80966"
+                android:textColorLink="#e80966"
+                tools:ignore="LabelFor,UnusedAttribute" />
+
+            <EditText
+                android:id="@+id/registrationID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30sp"
+                android:layout_marginTop="20sp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/registr_code"
+                android:inputType="text"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="#e80966"
+                android:textColorLink="#e80966"
+                tools:ignore="LabelFor,UnusedAttribute" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30sp"
+                android:layout_marginTop="20sp"
+                android:orientation="horizontal"
+                tools:ignore="UnusedAttribute">
+
+                <RadioButton
+                    android:id="@+id/manager"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:layout_weight="3"
+                    android:text="@string/manager"/>
+
+                <RadioButton
+                    android:id="@+id/client"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:layout_weight="2"
+                    android:text="@string/client"/>
+
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/registration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="30sp"
+                android:layout_gravity="center"
+                android:background="@drawable/registration_button"
+                android:paddingHorizontal="8sp"
+                android:text="@string/registrate"
+                android:textColor="@color/colorPrimaryDark"
+                tools:ignore="ButtonStyle,RtlHardcoded,UnusedAttribute" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

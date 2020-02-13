@@ -5,4 +5,13 @@
     <string name="password"> Пароль</string>
     <string name="singin">Войти</string>
     <string name="registration">Регистрация</string>
+    <string name="rename">Введиде имя пользователя</string>
+    <string name="repass">Повторите пароль</string>
+    <string name="email_gmail">Email или gmail</string>
+    <string name="fisical_address">Адрес Организации(Полный)</string>
+    <string name="phone">телефон(номер)</string>
+    <string name="registr_code">Код регистра</string>
+    <string name="manager">Менеджер</string>
+    <string name="client">клиент</string>
+    <string name="registrate">Зарегистрироваться</string>
 </resources>
