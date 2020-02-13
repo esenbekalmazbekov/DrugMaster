@@ -1,7 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"/>
+    android:orientation="vertical"
+    android:background="@color/activityBackround"
+    tools:context=".MainActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/activityBackround"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.example.drugmaster.View.GradientTextView
+                android:id="@+id/welcome_id"
+                style="@android:style/Widget.Material.TextView.SpinnerItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="150sp"
+                android:gravity="center"
+                android:text="@string/welcome_to_dragmaster"
+                android:textColorHighlight="@android:color/darker_gray"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/UserLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30sp"
+                android:layout_marginTop="20sp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/name"
+                android:inputType="textPersonName"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="#e80966"
+                android:textColorLink="#e80966"
+                tools:ignore="LabelFor,UnusedAttribute" />
+
+            <EditText
+                android:id="@+id/userPassoword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30sp"
+                android:layout_marginTop="20sp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="#e80966"
+                android:textColorLink="#e80966"
+                tools:ignore="LabelFor,UnusedAttribute" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="20sp"
+                android:layout_marginTop="35sp"
+                android:layout_marginBottom="30sp"
+                android:orientation="horizontal"
+                tools:ignore="UnusedAttribute">
+
+                <Button
+                    android:id="@+id/signIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20sp"
+                    android:layout_weight="2"
+                    android:background="@drawable/sing_in_button"
+                    android:text="@string/singin"
+                    android:textColor="@color/colorPrimaryDark"
+                    tools:ignore="ButtonStyle" />
+
+                <Button
+                    android:id="@+id/registration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20sp"
+                    android:layout_weight="3"
+                    android:background="@drawable/registration_button"
+                    android:paddingHorizontal="8sp"
+                    android:text="@string/registration"
+                    android:textColor="@color/colorPrimaryDark"
+                    tools:ignore="ButtonStyle,RtlHardcoded" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

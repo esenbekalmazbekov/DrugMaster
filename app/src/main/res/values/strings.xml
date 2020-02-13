@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">DrugMaster</string>
+    <string name="welcome_to_dragmaster">Добро пожаловать в \n DrugMaster</string>
+    <string name="name">  Имя</string>
+    <string name="password"> Пароль</string>
+    <string name="singin">Войти</string>
+    <string name="registration">Регистрация</string>
 </resources>
