@@ -13,13 +13,18 @@ import com.example.drugmaster.View.GradientTextView;
 
 public class MainActivity extends AppCompatActivity {
     GradientTextView welcome;
-    Button registrBtn;
+    Button registrBtn,signIn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         preAnimation();
         registration();
+        signingIn();
+    }
+
+    private void signingIn() {
+
     }
 
     private void registration() {
