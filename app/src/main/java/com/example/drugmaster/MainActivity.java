@@ -18,13 +18,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         preAnimation();
         registration();
         signingIn();
     }
 
     private void signingIn() {
-
+        signIn = findViewById(R.id.signIn);
+        signIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ManagerActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void registration() {

@@ -14,4 +14,12 @@
     <string name="manager">Менеджер</string>
     <string name="client">клиент</string>
     <string name="registrate">Зарегистрироваться</string>
+    <string name="info">Info</string>
+    <string name="list">Список</string>
+    <string name="orders">Заказы</string>
+    <string name="clients">Клиенты</string>
+    <string name="other">Другое</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
