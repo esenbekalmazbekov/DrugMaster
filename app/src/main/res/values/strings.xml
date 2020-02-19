@@ -22,4 +22,8 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="managers">Менеджеры</string>
+    <string name="search">Поиск</string>
+    <string name="basket">Корзина</string>
+    <string name="complaint">Пожаловаться</string>
 </resources>

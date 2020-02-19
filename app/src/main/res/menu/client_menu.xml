@@ -10,19 +10,20 @@
             android:title="@string/info"/>
 
         <item
-            android:id="@+id/nav_list"
-            android:icon="@drawable/ic_list"
-            android:title="@string/list"/>
+            android:id="@+id/nav_manager"
+            android:icon="@drawable/ic_manager"
+            android:title="@string/managers"/>
 
         <item
-            android:id="@+id/nav_orders"
+            android:id="@+id/nav_search"
+            android:icon="@drawable/ic_search"
+            android:title="@string/search"/>
+
+        <item
+            android:id="@+id/nav_basket"
             android:icon="@drawable/ic_orders"
-            android:title="@string/orders"/>
+            android:title="@string/basket"/>
 
-        <item
-            android:id="@+id/nav_clients"
-            android:icon="@drawable/ic_clients"
-            android:title="@string/clients"/>
 
     </group>
 
