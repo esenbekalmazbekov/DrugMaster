@@ -1,4 +1,4 @@
-package com.example.drugmaster;
+package com.example.drugmaster.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.drugmaster.R;
 import com.example.drugmaster.View.GradientTextView;
 
 public class MainActivity extends AppCompatActivity {

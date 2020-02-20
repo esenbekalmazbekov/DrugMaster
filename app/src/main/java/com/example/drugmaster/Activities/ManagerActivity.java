@@ -1,4 +1,4 @@
-package com.example.drugmaster;
+package com.example.drugmaster.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.drugmaster.R;
 import com.example.drugmaster.fragments.ClientsFragment;
 import com.example.drugmaster.fragments.InfoFragment;
 import com.example.drugmaster.fragments.ListFragment;

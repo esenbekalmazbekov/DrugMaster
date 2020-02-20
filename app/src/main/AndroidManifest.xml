@@ -19,13 +19,17 @@
         android:fullBackupContent="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ClientActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".Activities.ClientActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="InnerclassSeparator" />
         <activity
-            android:name=".ManagerActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Registration" />
-        <activity android:name=".MainActivity">
+            android:name=".Activities.ManagerActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="InnerclassSeparator" />
+        <activity android:name=".Activities.Registration"
+            tools:ignore="InnerclassSeparator" />
+        <activity android:name=".Activities.MainActivity"
+            tools:ignore="InnerclassSeparator">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
