@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "778416388353",
+    "firebase_url": "https://drugmaster-ecaeb.firebaseio.com",
+    "project_id": "drugmaster-ecaeb",
+    "storage_bucket": "drugmaster-ecaeb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778416388353:android:822839850c599bfe34c300",
+        "android_client_info": {
+          "package_name": "com.example.drugmaster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "778416388353-9k0kfe0q99d29cq7lfeltbidn6lu5sfm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.drugmaster",
+            "certificate_hash": "dc83af01103d23f863001432e527e304bea759d9"
+          }
+        },
+        {
+          "client_id": "778416388353-hjma4u9f1guvs6dnfutgkbjj37183fhs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-zjWvXQImjmXQafaLO4JtKdmobUsbpso"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "778416388353-hjma4u9f1guvs6dnfutgkbjj37183fhs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
