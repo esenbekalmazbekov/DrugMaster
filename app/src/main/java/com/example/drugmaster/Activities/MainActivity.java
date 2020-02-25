@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void signingIn() {
         signIn = findViewById(R.id.signIn);
-        login = findViewById(R.id.UserLogin);
+        login = findViewById(R.id.userLogin);
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
