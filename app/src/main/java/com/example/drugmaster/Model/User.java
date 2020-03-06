@@ -5,34 +5,23 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class User {
 
-    private String username;
-    private String password;
+    private String orgname;
     private String email;
     private String phone;
     private String address;
-    private String id;
     private String status;
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String username, String password, String email, String phone, String address, String regcode,String status) {
-        this.username = username;
-        this.password = password;
+    public User(String orgname, String email, String phone, String address,String status) {
+        this.orgname = orgname;
         this.email = email;
         this.phone = phone;
         this.address = address;
-        this.id = regcode;
         this.status = status;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 
     public String getEmail() {
         return email;
@@ -46,11 +35,11 @@ public class User {
         return address;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public String getStatus() {
         return status;
+    }
+
+    public String getOrgname() {
+        return orgname;
     }
 }

@@ -38,7 +38,7 @@
                 android:layout_marginTop="20sp"
                 android:autofillHints=""
                 android:ems="10"
-                android:hint="@string/name"
+                android:hint="@string/email_gmail"
                 android:inputType="textPersonName"
                 android:textColor="@color/colorPrimaryDark"
                 android:textColorHint="#e80966"
@@ -85,13 +85,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20sp"
-                    android:layout_weight="3"
+                    android:layout_weight="2"
                     android:background="@drawable/registration_button"
                     android:paddingHorizontal="8sp"
                     android:text="@string/registration"
                     android:textColor="@color/colorPrimaryDark"
                     tools:ignore="ButtonStyle,RtlHardcoded" />
             </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progress"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </ScrollView>

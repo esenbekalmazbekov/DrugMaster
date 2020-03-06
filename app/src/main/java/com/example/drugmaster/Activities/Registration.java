@@ -26,14 +26,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 
 import java.util.Objects;
+import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -46,24 +50,26 @@ public class Registration extends AppCompatActivity {
     Uri pickedImgUri ;
 
     // registration
-    private EditText username,password,repassword,email,phone,address,regcode;
+    private EditText orgName,password,repassword,email,phone,address,regcode;
     private RadioButton client;
     private Button submit;
     private FirebaseAuth mAuth;
     private static final String ACTIVE_KEY = "activationKey";
     private DatabaseReference userdatabase;
-
+    private String key;
+    private ProgressBar progressBar;
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         getPhoto();
         activation();
-
     }
 
     private void activation() {
-        username = findViewById(R.id.userLogin);
+        getActivationKey();
+        orgName = findViewById(R.id.orgName);
         password = findViewById(R.id.userPassoword);
         repassword = findViewById(R.id.userPassowordRewrite);
         email = findViewById(R.id.userEmail);
@@ -73,6 +79,7 @@ public class Registration extends AppCompatActivity {
         client = findViewById(R.id.client);
         mAuth = FirebaseAuth.getInstance();
         submit = findViewById(R.id.registration);
+        progressBar = findViewById(R.id.progressBar);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,58 +90,65 @@ public class Registration extends AppCompatActivity {
 
     private void clicked() {
         submit.setVisibility(View.INVISIBLE);
-        ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
 
         if(fieldIsNotEmpty()){
-            if(controlPasswordSameValue())
-                goToRegistration();
-            else
+            if(controlPasswordSameValue()){
+                if(activationCodeControl()){
+                    FirebaseDatabase.getInstance().getReference().child(ACTIVE_KEY).setValue(UUID.randomUUID().toString());
+                    goToRegistration();
+                }
+                else {
+                    showMessage("Неверный код регистра");
+                    submit.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+            else{
                 showMessage("Пароли не совподают");
+                submit.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+            }
         }
-        else
+        else{
             showMessage("Есть пустое поле");
+            submit.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+        }
 
-        submit.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
     }
 
     private void goToRegistration() {
-        final User user;
         if(this.client.isSelected())
-            user = new User(this.username.getText().toString(),
-                    this.password.getText().toString(),
+            user = new User(this.orgName.getText().toString(),
                     this.email.getText().toString(),
                     this.phone.getText().toString(),
                     this.address.getText().toString(),
-                    this.regcode.getText().toString(),"client");
+                    "client");
         else
-            user = new User(this.username.getText().toString(),
-                    this.password.getText().toString(),
+            user = new User(this.orgName.getText().toString(),
                     this.email.getText().toString(),
                     this.phone.getText().toString(),
                     this.address.getText().toString(),
-                    this.regcode.getText().toString(),"manager");
+                    "manager");
 
-
-        mAuth.createUserWithEmailAndPassword(user.getEmail(),user.getPassword())
+        mAuth.createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            showMessage("Регистрация прошла успешна!!!");
+                        if (task.isSuccessful()) {
 
                             StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("users_photos");
                             final StorageReference imageFilePath = mStorage.child(Objects.requireNonNull(pickedImgUri.getLastPathSegment()));
                             imageFilePath.putFile(pickedImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    showMessage("onSuccess");
+                                    Registration.this.showMessage("onSuccess");
                                     imageFilePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
-                                                    .setDisplayName(user.getUsername())
+                                                    .setDisplayName(user.getOrgname())
                                                     .setPhotoUri(uri)
                                                     .build();
 
@@ -143,35 +157,47 @@ public class Registration extends AppCompatActivity {
                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
-
                                                             if (task.isSuccessful()) {
-                                                                // user info updated successfully
-                                                                showMessage("Register Complete");
+                                                                showMessage("Регистрация прошла успешна!!!");
                                                             }
 
                                                             updateUI();
 
                                                             userdatabase = FirebaseDatabase.getInstance().getReference();
-                                                            userdatabase.child("users").child(user.getEmail()).setValue(user);
-                                                            userdatabase.child(ACTIVE_KEY).setValue("12345");
-                                                            
+
+                                                            if (user.getStatus().equals("manager"))
+                                                                userdatabase.child("users").child("managers").child(user.getOrgname()).setValue(user);
+                                                            else
+                                                                userdatabase.child("users").child("clients").child(user.getOrgname()).setValue(user);
+
+                                                            submit.setVisibility(View.VISIBLE);
+                                                            progressBar.setVisibility(View.INVISIBLE);
+
                                                         }
                                                     });
                                         }
                                     });
                                 }
                             });
+                        } else {
+                            Registration.this.showMessage("Ошибка!!!");
+                            submit.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
-                        else
-                            showMessage("Ошибка!!!");
                     }
                 });
     }
 
+    private boolean activationCodeControl() {
+        return regcode.getText().toString().equals(key);
+    }
     private void updateUI() {
-
-        Intent homeActivity = new Intent(getApplicationContext(),ManagerActivity.class);
-        startActivity(homeActivity);
+        Intent newActivity;
+        if (user.getStatus().equals("manager"))
+            newActivity = new Intent(getApplicationContext(),ManagerActivity.class);
+        else
+            newActivity = new Intent(getApplicationContext(),ClientActivity.class);
+        startActivity(newActivity);
         finish();
     }
 
@@ -181,7 +207,7 @@ public class Registration extends AppCompatActivity {
 
     private boolean fieldIsNotEmpty() {
 
-        if(username.getText().toString().equals(""))
+        if(orgName.getText().toString().equals(""))
             return false;
         if(password.getText().toString().equals(""))
             return false;
@@ -201,12 +227,11 @@ public class Registration extends AppCompatActivity {
 
         imgUserPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= 22)
                     checkAndRequestForPermission();
                 else
                     openGallery();
-
             }
         });
     }
@@ -240,6 +265,21 @@ public class Registration extends AppCompatActivity {
         Toast.makeText(Registration.this,str,Toast.LENGTH_LONG).show();
     }
 
+    private void getActivationKey(){
+        FirebaseDatabase.getInstance().getReference().child(ACTIVE_KEY)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        // Get user information
+                        key = (String) Objects.requireNonNull(dataSnapshot.getValue());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
