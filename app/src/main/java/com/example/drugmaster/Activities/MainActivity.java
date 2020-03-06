@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -79,8 +80,10 @@ public class MainActivity extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(login,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful())
-                    updateUI(login);
+                if(task.isSuccessful()) {
+                    String displayName = Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).getDisplayName();
+                    updateUI(displayName);
+                }
                 else {
                     showMessage(Objects.requireNonNull(task.getException()).getMessage());
                     progressBar.setVisibility(View.INVISIBLE);
@@ -91,19 +94,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUI(final String login) {
-        FirebaseDatabase.getInstance().getReference().child("users").child("managers").child(login).addValueEventListener(new ValueEventListener() {
+    private void updateUI(final String orgname) {
+        FirebaseDatabase.getInstance().getReference().child("users").child("managers").child(orgname).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                user = dataSnapshot.getValue(User.class);
-                progressBar.setVisibility(View.INVISIBLE);
-                signIn.setVisibility(View.VISIBLE);
-                registrBtn.setVisibility(View.VISIBLE);
-                setLogin(user);
+                    user = dataSnapshot.getValue(User.class);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    signIn.setVisibility(View.VISIBLE);
+                    registrBtn.setVisibility(View.VISIBLE);
+                    setLogin(user);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                FirebaseDatabase.getInstance().getReference().child("users").child("clients").child(login).addValueEventListener(new ValueEventListener() {
+                FirebaseDatabase.getInstance().getReference().child("users").child("clients").child(orgname).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         user = dataSnapshot.getValue(User.class);
@@ -161,15 +164,13 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         try {
             FirebaseUser user = mAuth.getCurrentUser();
-
             if(user != null) {
                 //user is already connected  so we need to redirect him to home page
-                updateUI(user.getEmail());
-
+                updateUI(user.getDisplayName());
             }
+
         }catch (NullPointerException e){
             showMessage("нет сохр пользователя");
         }
-
     }
 }

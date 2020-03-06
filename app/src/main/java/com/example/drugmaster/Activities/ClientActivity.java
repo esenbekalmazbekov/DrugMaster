@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import com.example.drugmaster.fragments.InfoFragment;
 import com.example.drugmaster.fragments.ManagerFragment;
 import com.example.drugmaster.fragments.SearchFragment;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ClientActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     Toolbar toolbar;
@@ -36,7 +38,7 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
         drawer = findViewById(R.id.clientdr_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -88,6 +90,11 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
                 break;
             case R.id.nav_complaint:
                 Toast.makeText(this,"complaint",Toast.LENGTH_LONG).show();
+                break;
+            case R.id.nav_singout:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(ClientActivity.this,MainActivity.class));
+                ClientActivity.this.finish();
         }
 
         drawer.closeDrawer(GravityCompat.START);

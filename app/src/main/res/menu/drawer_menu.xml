@@ -32,6 +32,10 @@
                 android:id="@+id/nav_complaint"
                 android:icon="@drawable/ic_send_black_24dp"
                 android:title="@string/complaint"/>
+            <item
+                android:id="@+id/nav_singout"
+                android:icon="@drawable/ic_power_settings_new_black_24dp"
+                android:title="@string/signOut"/>
         </menu>
     </item>
 </menu>

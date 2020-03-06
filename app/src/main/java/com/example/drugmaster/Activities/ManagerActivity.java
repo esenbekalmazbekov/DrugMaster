@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import com.example.drugmaster.fragments.InfoFragment;
 import com.example.drugmaster.fragments.ListFragment;
 import com.example.drugmaster.fragments.OrdersFragment;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ManagerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Toolbar toolbar;
@@ -88,6 +90,11 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
                 break;
             case R.id.nav_complaint:
                 Toast.makeText(this,"complaint",Toast.LENGTH_LONG).show();
+                break;
+            case R.id.nav_singout:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(ManagerActivity.this,MainActivity.class));
+                ManagerActivity.this.finish();
         }
 
         drawer.closeDrawer(GravityCompat.START);
