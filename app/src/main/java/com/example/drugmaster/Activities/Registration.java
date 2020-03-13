@@ -1,10 +1,5 @@
 package com.example.drugmaster.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +12,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.drugmaster.Model.User;
 import com.example.drugmaster.R;
@@ -35,13 +35,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-
 import java.util.Objects;
 import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class Registration extends AppCompatActivity {
+public class Registration extends AppCompatActivity{
 
     // profile change
     private CircleImageView imgUserPhoto;
@@ -51,7 +50,7 @@ public class Registration extends AppCompatActivity {
 
     // registration
     private EditText orgName,password,repassword,email,phone,address,regcode;
-    private RadioButton client;
+    private RadioButton client,manager;
     private Button submit;
     private FirebaseAuth mAuth;
     private static final String ACTIVE_KEY = "activationKey";
@@ -59,6 +58,7 @@ public class Registration extends AppCompatActivity {
     private String key;
     private ProgressBar progressBar;
     private User user;
+    private String status = "manager";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,9 +77,24 @@ public class Registration extends AppCompatActivity {
         address = findViewById(R.id.location);
         regcode = findViewById(R.id.registrationID);
         client = findViewById(R.id.client);
+        manager = findViewById(R.id.manager);
         mAuth = FirebaseAuth.getInstance();
         submit = findViewById(R.id.registration);
         progressBar = findViewById(R.id.progressBar);
+        client.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                status = "client";
+                client.setChecked(true);
+            }
+        });
+        manager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                status = "manager";
+                manager.setChecked(true);
+            }
+        });
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,7 +110,6 @@ public class Registration extends AppCompatActivity {
         if(fieldIsNotEmpty()){
             if(controlPasswordSameValue()){
                 if(activationCodeControl()){
-                    FirebaseDatabase.getInstance().getReference().child(ACTIVE_KEY).setValue(UUID.randomUUID().toString());
                     goToRegistration();
                 }
                 else {
@@ -118,19 +132,17 @@ public class Registration extends AppCompatActivity {
 
     }
 
-    private void goToRegistration() {
-        if(this.client.isSelected())
-            user = new User(this.orgName.getText().toString(),
-                    this.email.getText().toString(),
-                    this.phone.getText().toString(),
-                    this.address.getText().toString(),
-                    "client");
-        else
-            user = new User(this.orgName.getText().toString(),
-                    this.email.getText().toString(),
-                    this.phone.getText().toString(),
-                    this.address.getText().toString(),
-                    "manager");
+    private void goToRegistration(){
+
+        user = new User(
+                this.regcode.getText().toString(),
+                this.orgName.getText().toString(),
+                this.email.getText().toString(),
+                this.phone.getText().toString(),
+                this.address.getText().toString(),
+                status);
+
+
 
         mAuth.createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -148,7 +160,7 @@ public class Registration extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
-                                                    .setDisplayName(user.getOrgname())
+                                                    .setDisplayName(user.getId())
                                                     .setPhotoUri(uri)
                                                     .build();
 
@@ -166,9 +178,9 @@ public class Registration extends AppCompatActivity {
                                                             userdatabase = FirebaseDatabase.getInstance().getReference();
 
                                                             if (user.getStatus().equals("manager"))
-                                                                userdatabase.child("users").child("managers").child(user.getOrgname()).setValue(user);
+                                                                userdatabase.child("users").child("managers").child(user.getId()).setValue(user);
                                                             else
-                                                                userdatabase.child("users").child("clients").child(user.getOrgname()).setValue(user);
+                                                                userdatabase.child("users").child("clients").child(user.getId()).setValue(user);
 
                                                             submit.setVisibility(View.VISIBLE);
                                                             progressBar.setVisibility(View.INVISIBLE);
@@ -193,6 +205,8 @@ public class Registration extends AppCompatActivity {
     }
     private void updateUI() {
         Intent newActivity;
+
+        FirebaseDatabase.getInstance().getReference().child(ACTIVE_KEY).setValue(UUID.randomUUID().toString());
         if (user.getStatus().equals("manager"))
             newActivity = new Intent(getApplicationContext(),ManagerActivity.class);
         else

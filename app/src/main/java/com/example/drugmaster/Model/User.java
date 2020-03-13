@@ -10,11 +10,13 @@ public class User {
     private String phone;
     private String address;
     private String status;
+    private String id;
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String orgname, String email, String phone, String address,String status) {
+    public User(String id,String orgname, String email, String phone, String address,String status) {
+        this.id = id;
         this.orgname = orgname;
         this.email = email;
         this.phone = phone;
@@ -41,5 +43,9 @@ public class User {
 
     public String getOrgname() {
         return orgname;
+    }
+
+    public String getId() {
+        return id;
     }
 }

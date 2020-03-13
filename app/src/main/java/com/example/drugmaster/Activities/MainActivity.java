@@ -1,8 +1,5 @@
 package com.example.drugmaster.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.drugmaster.Model.User;
 import com.example.drugmaster.R;
@@ -26,7 +26,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -102,28 +101,38 @@ public class MainActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.INVISIBLE);
                     signIn.setVisibility(View.VISIBLE);
                     registrBtn.setVisibility(View.VISIBLE);
-                    setLogin(user);
+                    if(user == null){
+                        FirebaseDatabase.getInstance().getReference().child("users").child("clients").child(orgname).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                user = dataSnapshot.getValue(User.class);
+                                progressBar.setVisibility(View.INVISIBLE);
+                                signIn.setVisibility(View.VISIBLE);
+                                registrBtn.setVisibility(View.VISIBLE);
+                                if(user == null){
+                                    showMessage("Вы не зарегистрированы!!!");
+                                }
+                                setLogin(user);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                showMessage("ваши данные не сохранились,обратитесь к админу!!!");
+                                progressBar.setVisibility(View.INVISIBLE);
+                                signIn.setVisibility(View.VISIBLE);
+                                registrBtn.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }
+                    else
+                        setLogin(user);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                FirebaseDatabase.getInstance().getReference().child("users").child("clients").child(orgname).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        user = dataSnapshot.getValue(User.class);
-                        progressBar.setVisibility(View.INVISIBLE);
-                        signIn.setVisibility(View.VISIBLE);
-                        registrBtn.setVisibility(View.VISIBLE);
-                        setLogin(user);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        showMessage("ваши данные не сохранились,обратитесь к админу!!!");
-                        progressBar.setVisibility(View.INVISIBLE);
-                        signIn.setVisibility(View.VISIBLE);
-                        registrBtn.setVisibility(View.VISIBLE);
-                    }
-                });
+                showMessage("ваши данные не сохранились,обратитесь к админу!!!");
+                progressBar.setVisibility(View.INVISIBLE);
+                signIn.setVisibility(View.VISIBLE);
+                registrBtn.setVisibility(View.VISIBLE);
             }
         });
     }
