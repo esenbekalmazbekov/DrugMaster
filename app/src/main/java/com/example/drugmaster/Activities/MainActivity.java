@@ -93,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUI(final String orgname) {
-        FirebaseDatabase.getInstance().getReference().child("users").child("managers").child(orgname).addValueEventListener(new ValueEventListener() {
+    private void updateUI(final String id) {
+        FirebaseDatabase.getInstance().getReference().child("users").child("managers").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     user = dataSnapshot.getValue(User.class);
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                     signIn.setVisibility(View.VISIBLE);
                     registrBtn.setVisibility(View.VISIBLE);
                     if(user == null){
-                        FirebaseDatabase.getInstance().getReference().child("users").child("clients").child(orgname).addValueEventListener(new ValueEventListener() {
+                        FirebaseDatabase.getInstance().getReference().child("users").child("clients").child(id).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 user = dataSnapshot.getValue(User.class);
@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         else
             newPage = new Intent(MainActivity.this,ClientActivity.class);
 
+        newPage.putExtra("userdata",user);
         startActivity(newPage);
         finish();
     }

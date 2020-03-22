@@ -1,9 +1,12 @@
 package com.example.drugmaster.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
-public class User {
+public class User implements Parcelable {
 
     private String orgname;
     private String email;
@@ -24,6 +27,27 @@ public class User {
         this.status = status;
     }
 
+
+    private User(Parcel in) {
+        orgname = in.readString();
+        email = in.readString();
+        phone = in.readString();
+        address = in.readString();
+        status = in.readString();
+        id = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getEmail() {
         return email;
@@ -47,5 +71,20 @@ public class User {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(orgname);
+        dest.writeString(email);
+        dest.writeString(phone);
+        dest.writeString(address);
+        dest.writeString(status);
+        dest.writeString(id);
     }
 }

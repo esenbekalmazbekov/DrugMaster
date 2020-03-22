@@ -3,6 +3,8 @@ package com.example.drugmaster.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.bumptech.glide.Glide;
+import com.example.drugmaster.Model.User;
 import com.example.drugmaster.R;
 import com.example.drugmaster.fragments.BasketFragment;
 import com.example.drugmaster.fragments.InfoFragment;
@@ -20,10 +24,14 @@ import com.example.drugmaster.fragments.SearchFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ClientActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     Toolbar toolbar;
     private DrawerLayout drawer;
-
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +50,8 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        user = getIntent().getParcelableExtra("userdata");
+        setUserData();
         if(savedInstanceState == null){
             getSupportFragmentManager()
                     .beginTransaction()
@@ -50,6 +60,22 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
 
             navigationView.setCheckedItem(R.id.nav_info);
         }
+    }
+
+    private void setUserData() {
+        setHeader();
+    }
+
+    private void setHeader() {
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView navOrgname = headerView.findViewById(R.id.orgName);
+        TextView navEmail = headerView.findViewById(R.id.mail);
+        CircleImageView imageView = headerView.findViewById(R.id.profile_image);
+
+        navOrgname.setText(user.getOrgname());
+        navEmail.setText(user.getEmail());
+        Glide.with(this).load(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhotoUrl()).into(imageView);
     }
 
     @Override

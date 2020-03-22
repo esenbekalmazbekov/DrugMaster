@@ -22,6 +22,7 @@
         android:paddingTop="10dp"
         android:textSize="15sp"
         android:textColor="@color/first"
+        android:id="@+id/orgName"
         android:text="@string/name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
@@ -30,6 +31,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:textSize="15sp"
+        android:id="@+id/mail"
         android:textColor="@color/first"
         android:text="@string/email_gmail"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>

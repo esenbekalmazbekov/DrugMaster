@@ -204,15 +204,17 @@ public class Registration extends AppCompatActivity{
         return regcode.getText().toString().equals(key);
     }
     private void updateUI() {
-        Intent newActivity;
+        Intent newPage;
 
         FirebaseDatabase.getInstance().getReference().child(ACTIVE_KEY).setValue(UUID.randomUUID().toString());
         if (user.getStatus().equals("manager"))
-            newActivity = new Intent(getApplicationContext(),ManagerActivity.class);
+            newPage = new Intent(Registration.this,ManagerActivity.class);
         else
-            newActivity = new Intent(getApplicationContext(),ClientActivity.class);
-        startActivity(newActivity);
-        finish();
+            newPage = new Intent(Registration.this,ClientActivity.class);
+
+        newPage.putExtra("userdata",user);
+        startActivity(newPage);
+        finish();;
     }
 
     private boolean controlPasswordSameValue() {

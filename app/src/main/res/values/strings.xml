@@ -27,4 +27,10 @@
     <string name="basket">Корзина</string>
     <string name="complaint">Пожаловаться</string>
     <string name="signOut">Выйти</string>
+    <string name="todo">TODO</string>
+    <string name="status">status</string>
+    <string name="datachange">Изменить данные</string>
+    <string name="changeandsave">Измените данные и нажмите сохранить.</string>
+    <string name="save">cохранить</string>
+    <string name="cancel">отмена</string>
 </resources>
