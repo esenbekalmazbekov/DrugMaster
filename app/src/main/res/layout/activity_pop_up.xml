@@ -62,7 +62,7 @@
         tools:ignore="UnusedAttribute">
 
         <Button
-            android:id="@+id/signIn"
+            android:id="@+id/save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -73,7 +73,7 @@
             tools:ignore="ButtonStyle" />
 
         <Button
-            android:id="@+id/registration"
+            android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_gravity="end"
             android:layout_height="wrap_content"

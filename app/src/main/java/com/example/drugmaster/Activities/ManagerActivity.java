@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -32,6 +33,7 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
     Toolbar toolbar;
     private DrawerLayout drawer;
     private User user;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         drawer = findViewById(R.id.drawer_layout);
 
@@ -53,7 +55,7 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
 
         user = getIntent().getParcelableExtra("userdata");
 
-        setUserData();
+        setHeader();
 
         if(savedInstanceState == null){
             getSupportFragmentManager()
@@ -63,10 +65,6 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
 
             navigationView.setCheckedItem(R.id.nav_info);
         }
-    }
-
-    private void setUserData() {
-        setHeader();
     }
 
     private void setHeader() {
@@ -89,12 +87,27 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
             super.onBackPressed();
         }
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1){
+            if(resultCode == RESULT_OK){
+                user = Objects.requireNonNull(data).getParcelableExtra("userdata");
+                setHeader();
+                finish();
+            }
+        }
+    }
+    public void createPopUpWindow() {
+        Intent intent = new Intent(ManagerActivity.this, PopUpActivity.class);
+        intent.putExtra("userdata",user);
+        startActivityForResult(intent,1);
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.nav_info:
-                getIntent().putExtra("userdata",user);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container,new InfoFragment())

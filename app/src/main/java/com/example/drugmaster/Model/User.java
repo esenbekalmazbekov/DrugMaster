@@ -69,6 +69,18 @@ public class User implements Parcelable {
         return orgname;
     }
 
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setOrgname(String orgname) {
+        this.orgname = orgname;
+    }
+
     public String getId() {
         return id;
     }
