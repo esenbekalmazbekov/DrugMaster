@@ -1,4 +1,4 @@
-package com.example.drugmaster.Activities;
+package com.example.drugmaster.popups;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +17,7 @@ import com.example.drugmaster.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class PopUpActivity extends AppCompatActivity {
+public class PopupInfo extends AppCompatActivity {
     private User user;
     private TextView orgName, address, phone;
     private DatabaseReference userdatabase;
@@ -84,7 +84,7 @@ public class PopUpActivity extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width * 0.8), (int) (height * 0.6));
+        getWindow().setLayout((int) (width * 0.8), (int) (height * 0.5));
 
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.gravity = Gravity.CENTER;
@@ -100,7 +100,7 @@ public class PopUpActivity extends AppCompatActivity {
         user = getIntent().getParcelableExtra("userdata");
         orgName = findViewById(R.id.orgName);
         address = findViewById(R.id.address);
-        phone =findViewById(R.id.phone);
+        phone = findViewById(R.id.phone);
 
         orgName.setText(user.getOrgname());
         address.setText(user.getAddress());

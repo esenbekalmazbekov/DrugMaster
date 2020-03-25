@@ -33,4 +33,16 @@
     <string name="changeandsave">Измените данные и нажмите сохранить.</string>
     <string name="save">cохранить</string>
     <string name="cancel">отмена</string>
+    <string name="add">добавить</string>
+    <string name="namedrugs">Наимненование</string>
+    <string name="drugaddinfo">Введите данные лекарства и сохраните</string>
+    <string name="drugmakes">Изготовитель</string>
+    <string name="price">цена в сомах</string>
+
+    <array name="unit">
+        <item>Упаковка</item>
+        <item>Флакон</item>
+        <item>Штук</item>
+        <item>Блистер</item>
+    </array>
 </resources>

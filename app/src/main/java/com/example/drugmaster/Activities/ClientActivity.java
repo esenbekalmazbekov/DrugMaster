@@ -22,6 +22,7 @@ import com.example.drugmaster.fragments.BasketFragment;
 import com.example.drugmaster.fragments.InfoFragment;
 import com.example.drugmaster.fragments.ManagerFragment;
 import com.example.drugmaster.fragments.SearchFragment;
+import com.example.drugmaster.popups.PopupInfo;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -95,8 +96,8 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
             }
         }
     }
-    public void createPopUpWindow() {
-        Intent intent = new Intent(ClientActivity.this, PopUpActivity.class);
+    public void createPopUpInfoChange() {
+        Intent intent = new Intent(ClientActivity.this, PopupInfo.class);
         intent.putExtra("userdata",user);
         startActivityForResult(intent,1);
     }
@@ -104,7 +105,6 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.nav_info:
-                getIntent().putExtra("userdata",user);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container_client,new InfoFragment())

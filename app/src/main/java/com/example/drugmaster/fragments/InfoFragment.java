@@ -19,6 +19,7 @@ import com.example.drugmaster.R;
 import java.util.Objects;
 
 public class InfoFragment extends Fragment {
+    public static final int INFO_FRAGMENT = 1;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,10 +44,10 @@ public class InfoFragment extends Fragment {
             public void onClick(View v) {
                 if(user.getStatus().equals("manager")){
                     ManagerActivity managerActivity = (ManagerActivity)getActivity();
-                    Objects.requireNonNull(managerActivity).createPopUpWindow();
+                    Objects.requireNonNull(managerActivity).createPopUpInfoChange(INFO_FRAGMENT);
                 }else {
                     ClientActivity clientActivity = (ClientActivity)getActivity();
-                    Objects.requireNonNull(clientActivity).createPopUpWindow();
+                    Objects.requireNonNull(clientActivity).createPopUpInfoChange();
                 }
             }
         });

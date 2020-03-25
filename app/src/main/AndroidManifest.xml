@@ -13,14 +13,20 @@
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
+        android:hardwareAccelerated="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher_round"
         android:supportsRtl="true"
+        android:largeHeap="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".Activities.PopUpActivity"
+            android:name=".popups.PopupAdddrugs"
+            android:theme="@style/AppTheme.PopMe"
+            />
+        <activity
+            android:name=".popups.PopupInfo"
             android:theme="@style/AppTheme.PopMe"
             tools:ignore="InnerclassSeparator" />
         <activity

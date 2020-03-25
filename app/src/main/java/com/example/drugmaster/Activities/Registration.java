@@ -214,7 +214,7 @@ public class Registration extends AppCompatActivity{
 
         newPage.putExtra("userdata",user);
         startActivity(newPage);
-        finish();;
+        finish();
     }
 
     private boolean controlPasswordSameValue() {

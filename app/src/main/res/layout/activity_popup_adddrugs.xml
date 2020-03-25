@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/pop_bg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".popups.PopupInfo">
+    android:layout_height="match_parent"
+    tools:context=".popups.PopupAdddrugs">
 
     <TextView
         android:layout_width="match_parent"
@@ -15,40 +14,52 @@
         android:layout_marginHorizontal="8dp"
         android:textSize="25sp"
         android:textColor="@color/colorAccent"
-        android:text="@string/changeandsave"
-        />
+        android:text="@string/drugaddinfo" />
+
     <EditText
-        android:id="@+id/orgName"
+        android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
         android:layout_marginHorizontal="8dp"
-        android:textSize="14sp"
+        android:textSize="20sp"
         android:theme="@style/AppTheme"
+        android:hint="@string/namedrugs"
         android:inputType="text"
         android:importantForAutofill="no"
         tools:ignore="LabelFor" />
 
+    <Spinner
+        android:id="@+id/unit"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_marginVertical="8dp"
+        android:layout_marginHorizontal="8dp"
+        android:entries="@array/unit"/>
+
     <EditText
-        android:id="@+id/phone"
+        android:id="@+id/maker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
+        android:hint="@string/drugmakes"
         android:layout_marginHorizontal="8dp"
-        android:textSize="14sp"
+        android:textSize="20sp"
+        android:inputType="text"
         android:theme="@style/AppTheme"
         android:importantForAutofill="no"
         tools:ignore="LabelFor,TextFields" />
 
     <EditText
-        android:id="@+id/address"
+        android:id="@+id/price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
         android:layout_marginHorizontal="8dp"
-        android:textSize="14sp"
+        android:textSize="20sp"
         android:theme="@style/AppTheme"
-        android:inputType="text"
+        android:inputType="number"
+        android:hint="@string/price"
         android:importantForAutofill="no"
         tools:ignore="LabelFor" />
 

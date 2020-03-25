@@ -22,6 +22,8 @@ import com.example.drugmaster.fragments.ClientsFragment;
 import com.example.drugmaster.fragments.InfoFragment;
 import com.example.drugmaster.fragments.ListFragment;
 import com.example.drugmaster.fragments.OrdersFragment;
+import com.example.drugmaster.popups.PopupAdddrugs;
+import com.example.drugmaster.popups.PopupInfo;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -90,7 +92,7 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1){
+        if (requestCode == InfoFragment.INFO_FRAGMENT){
             if(resultCode == RESULT_OK){
                 user = Objects.requireNonNull(data).getParcelableExtra("userdata");
                 setHeader();
@@ -98,10 +100,19 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
             }
         }
     }
-    public void createPopUpWindow() {
-        Intent intent = new Intent(ManagerActivity.this, PopUpActivity.class);
-        intent.putExtra("userdata",user);
-        startActivityForResult(intent,1);
+    public void createPopUpInfoChange(int whichone) {
+        switch (whichone){
+            case InfoFragment.INFO_FRAGMENT:{
+                Intent intent = new Intent(ManagerActivity.this, PopupInfo.class);
+                intent.putExtra("userdata",user);
+                startActivityForResult(intent,InfoFragment.INFO_FRAGMENT);
+            }break;
+            case ListFragment.LIST_FRAGMENT:{
+                Intent intent = new Intent(ManagerActivity.this, PopupAdddrugs.class);
+                startActivity(intent);
+            }break;
+        }
+
     }
 
     @Override
