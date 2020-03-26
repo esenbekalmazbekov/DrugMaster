@@ -16,8 +16,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
-import com.example.drugmaster.Model.Drug;
-import com.example.drugmaster.Model.Druglist;
+import com.example.drugmaster.Model.drugmodel.Drug;
+import com.example.drugmaster.Model.drugmodel.Druglist;
 import com.example.drugmaster.Model.User;
 import com.example.drugmaster.R;
 import com.example.drugmaster.fragments.ClientsFragment;
@@ -38,7 +38,8 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
     private DrawerLayout drawer;
     private User user;
     public static final int ADDITION = 1;
-    public static final int CHANGE = 1;
+    public static final int CHANGE = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +92,7 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
             super.onBackPressed();
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -102,6 +104,7 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
             }
         }
     }
+
     public void createPopUpInfoChange(int whichone, Drug drug) {
         switch (whichone){
             case InfoFragment.INFO_FRAGMENT:{

@@ -1,4 +1,4 @@
-package com.example.drugmaster.Model;
+package com.example.drugmaster.Model.drugmodel;
 
 import android.os.Parcel;
 import android.os.Parcelable;

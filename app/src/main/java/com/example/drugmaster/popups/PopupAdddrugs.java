@@ -14,7 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.drugmaster.Activities.ManagerActivity;
-import com.example.drugmaster.Model.Drug;
+import com.example.drugmaster.Model.drugmodel.Drug;
 import com.example.drugmaster.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -51,7 +51,7 @@ public class PopupAdddrugs extends AppCompatActivity {
                 public void onClick(View v) {
                     if(isChanged()){
                         changeDrug();
-                        showMessage("changed");
+                        showMessage("Измененено!");
                     }else
                         showMessage("Имените данные или нажмите отмену!");
                 }

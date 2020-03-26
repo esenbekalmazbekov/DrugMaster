@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -12,24 +13,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.drugmaster.Activities.ManagerActivity;
-import com.example.drugmaster.Model.Drug;
-import com.example.drugmaster.Model.Druglist;
+import com.example.drugmaster.Model.drugmodel.DrugRequest;
 import com.example.drugmaster.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class ListFragment extends Fragment {
     public static final int LIST_FRAGMENT = 2;
     private ListView drugView;
-    private ImageButton addDrugs;
-    private ArrayList<Drug> drugarray;
+    private ImageButton addDrugs, searchbtn;
+    private EditText searchtext;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,51 +38,27 @@ public class ListFragment extends Fragment {
                 Objects.requireNonNull(managerActivity).createPopUpInfoChange(LIST_FRAGMENT,null);
             }
         });
+
+        searchbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DrugRequest(drugView,getActivity()).request(searchtext.getText().toString());
+            }
+        });
+
         return fragment;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        DatabaseReference db = FirebaseDatabase.
-                getInstance().
-                getReference("drugs").
-                child(
-                        Objects.requireNonNull(
-                                Objects.requireNonNull(
-                                        FirebaseAuth.
-                                                getInstance().
-                                                getCurrentUser()
-                                ).getDisplayName()
-                        )
-                );
-
-        drugarray = new ArrayList<>();
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                drugarray.clear();
-                for (DataSnapshot drugSnapshot: dataSnapshot.getChildren()){
-                    Drug drug = drugSnapshot.getValue(Drug.class);
-
-                    drugarray.add(drug);
-                }
-
-                Druglist adapter = new Druglist(getActivity(),drugarray);
-                drugView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        new DrugRequest(drugView,getActivity()).request();
     }
 
     private void initialize(View fragment) {
         addDrugs = fragment.findViewById(R.id.addbutton);
         drugView = fragment.findViewById(R.id.listOfDrugs);
+        searchbtn = fragment.findViewById(R.id.search);
+        searchtext = fragment.findViewById(R.id.searchtext);
     }
-
-
 }

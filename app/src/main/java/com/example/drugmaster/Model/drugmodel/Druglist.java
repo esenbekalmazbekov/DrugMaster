@@ -1,4 +1,4 @@
-package com.example.drugmaster.Model;
+package com.example.drugmaster.Model.drugmodel;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,6 +14,9 @@ import androidx.annotation.Nullable;
 
 import com.example.drugmaster.Activities.ManagerActivity;
 import com.example.drugmaster.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -23,19 +26,39 @@ public class Druglist extends ArrayAdapter<Drug> {
     private ArrayList<Drug> drugList;
     public static final int DRUGLIST_FRAGMENT_CHANGE = 3;
 
-    public Druglist(Activity activity, ArrayList<Drug> drugList) {
+    Druglist(Activity activity, ArrayList<Drug> drugList) {
         super(activity, R.layout.drug_list,drugList);
         this.activity = activity;
         this.drugList = drugList;
     }
 
-    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = activity.getLayoutInflater();
 
         @SuppressLint({"ViewHolder", "InflateParams"}) View listViewItem = inflater.inflate(R.layout.drug_list,null,true);
+
+        Drug drug = initialization(listViewItem,position);
+
+        buttonFunctions(listViewItem,drug);
+
+        return listViewItem;
+    }
+
+    private void buttonFunctions(View listViewItem,Drug drug) {
+        Button change = listViewItem.findViewById(R.id.change);
+        Button delete = listViewItem.findViewById(R.id.delet);
+        try {
+            change.setOnClickListener(new ChangeListener(drug.clone(),activity));
+            delete.setOnClickListener(new DeleteListener(drug.clone()));
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private Drug initialization(View listViewItem, int position) {
 
         TextView name = listViewItem.findViewById(R.id.name);
         TextView unit = listViewItem.findViewById(R.id.unit);
@@ -47,19 +70,31 @@ public class Druglist extends ArrayAdapter<Drug> {
         unit.setText(drug.getUnit());
         maker.setText(drug.getMaker());
         price.setText(drug.getPrice() + " с");
+        return drug;
+    }
 
+}
 
-        Button change = listViewItem.findViewById(R.id.change);
-        try {
-            change.setOnClickListener(new ChangeListener(drug.clone(),activity));
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        Button delete = listViewItem.findViewById(R.id.delete);
+class DeleteListener implements View.OnClickListener{
+    private Drug drug;
+    DeleteListener(Drug deteteById) {
+        this.drug = deteteById;
+    }
+    @Override
+    public void onClick(View v) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference().
+                child("drugs").
+                child(Objects.requireNonNull(
+                        Objects.requireNonNull(FirebaseAuth.
+                                getInstance().
+                                getCurrentUser()
+                        ).getDisplayName())
+                ).child(drug.getId());
 
-        return listViewItem;
+        db.removeValue();
     }
 }
+
 class ChangeListener implements View.OnClickListener{
     private Drug drug;
     private Activity activity;
