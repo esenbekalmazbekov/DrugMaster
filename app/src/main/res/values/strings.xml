@@ -38,6 +38,9 @@
     <string name="drugaddinfo">Введите данные лекарства и сохраните</string>
     <string name="drugmakes">Изготовитель</string>
     <string name="price">цена в сомах</string>
+    <string name="textview">TextView</string>
+    <string name="change">изменить</string>
+    <string name="delete">удалить</string>
 
     <array name="unit">
         <item>Упаковка</item>

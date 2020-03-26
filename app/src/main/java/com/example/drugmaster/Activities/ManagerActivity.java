@@ -16,6 +16,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
+import com.example.drugmaster.Model.Drug;
+import com.example.drugmaster.Model.Druglist;
 import com.example.drugmaster.Model.User;
 import com.example.drugmaster.R;
 import com.example.drugmaster.fragments.ClientsFragment;
@@ -35,8 +37,8 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
     Toolbar toolbar;
     private DrawerLayout drawer;
     private User user;
-    private NavigationView navigationView;
-
+    public static final int ADDITION = 1;
+    public static final int CHANGE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +48,7 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         drawer = findViewById(R.id.drawer_layout);
 
@@ -100,7 +102,7 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
             }
         }
     }
-    public void createPopUpInfoChange(int whichone) {
+    public void createPopUpInfoChange(int whichone, Drug drug) {
         switch (whichone){
             case InfoFragment.INFO_FRAGMENT:{
                 Intent intent = new Intent(ManagerActivity.this, PopupInfo.class);
@@ -109,8 +111,15 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
             }break;
             case ListFragment.LIST_FRAGMENT:{
                 Intent intent = new Intent(ManagerActivity.this, PopupAdddrugs.class);
+                intent.putExtra("type",ADDITION);
                 startActivity(intent);
             }break;
+            case Druglist.DRUGLIST_FRAGMENT_CHANGE:{
+                Intent intent = new Intent(ManagerActivity.this, PopupAdddrugs.class);
+                intent.putExtra("type",CHANGE);
+                intent.putExtra("drug",drug);
+                startActivity(intent);
+            }
         }
 
     }

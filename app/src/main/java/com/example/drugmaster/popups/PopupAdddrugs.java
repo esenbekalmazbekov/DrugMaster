@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.drugmaster.Activities.ManagerActivity;
 import com.example.drugmaster.Model.Drug;
 import com.example.drugmaster.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,22 +34,76 @@ public class PopupAdddrugs extends AppCompatActivity {
 
         creation();
         connection();
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addDrug();
+
+        if(getIntent().getIntExtra("type",1) == ManagerActivity.CHANGE){
+            newdrug = getIntent().getParcelableExtra("drug");
+            if (newdrug != null) {
+                name.setText(newdrug.getName());
+                for (int i = 0;i < 4;i++){
+                    if(unit.getItemAtPosition(i).toString().equals(newdrug.getUnit()))
+                        unit.setSelection(i);
+                }
+                maker.setText(newdrug.getMaker());
+                price.setText(newdrug.getPrice());
             }
-        });
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(isChanged()){
+                        changeDrug();
+                        showMessage("changed");
+                    }else
+                        showMessage("Имените данные или нажмите отмену!");
+                }
+            });
+
+        }
+        else {
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addDrug();
+                }
+            });
+        }
+
         cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+    }
+
+    private void changeDrug() {
+        if(isEmpties()){
+            DatabaseReference db = FirebaseDatabase.getInstance().getReference("drugs");
+
+            newdrug.setName(name.getText().toString());
+            newdrug.setUnit(unit.getSelectedItem().toString());
+            newdrug.setMaker(maker.getText().toString());
+            newdrug.setPrice(price.getText().toString());
+
+            db.child(Objects.requireNonNull(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName())).child(newdrug.getId()).setValue(newdrug);
+            showMessage("лекарство добавлено!");
+            finish();
+        }else
+            showMessage("Есть пустые поля!!!");
+    }
+
+    private boolean isChanged() {
+        if(!name.getText().toString().equals(newdrug.getName()))
+            return true;
+        if(!unit.getSelectedItem().toString().equals(newdrug.getUnit()))
+            return true;
+        if(!maker.getText().toString().equals(newdrug.getMaker()))
+            return true;
+
+        return !price.getText().toString().equals(newdrug.getPrice());
     }
 
     private void addDrug() {
-        if(!isEmpty()){
+        if(isEmpties()){
             DatabaseReference db = FirebaseDatabase.getInstance().getReference("drugs");
 
             newdrug = new Drug(
@@ -59,8 +114,8 @@ public class PopupAdddrugs extends AppCompatActivity {
                     price.getText().toString());
 
             db.child(Objects.requireNonNull(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName())).child(newdrug.getId()).setValue(newdrug);
-            finish();
             showMessage("лекарство добавлено!");
+            finish();
         }else
             showMessage("Есть пустые поля!!!");
     }
@@ -68,12 +123,12 @@ public class PopupAdddrugs extends AppCompatActivity {
         Toast.makeText(this,str,Toast.LENGTH_LONG).show();
     }
 
-    private boolean isEmpty() {
+    private boolean isEmpties() {
         if(TextUtils.isEmpty(name.getText().toString()))
-            return true;
+            return false;
         if(TextUtils.isEmpty(maker.getText().toString()))
-            return true;
-        return TextUtils.isEmpty(price.getText().toString());
+            return false;
+        return !TextUtils.isEmpty(price.getText().toString());
     }
 
     private void connection() {

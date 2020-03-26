@@ -58,7 +58,7 @@
         android:layout_marginHorizontal="8dp"
         android:textSize="20sp"
         android:theme="@style/AppTheme"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:hint="@string/price"
         android:importantForAutofill="no"
         tools:ignore="LabelFor" />

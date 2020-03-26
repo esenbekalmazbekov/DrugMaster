@@ -44,7 +44,7 @@ public class InfoFragment extends Fragment {
             public void onClick(View v) {
                 if(user.getStatus().equals("manager")){
                     ManagerActivity managerActivity = (ManagerActivity)getActivity();
-                    Objects.requireNonNull(managerActivity).createPopUpInfoChange(INFO_FRAGMENT);
+                    Objects.requireNonNull(managerActivity).createPopUpInfoChange(INFO_FRAGMENT,null);
                 }else {
                     ClientActivity clientActivity = (ClientActivity)getActivity();
                     Objects.requireNonNull(clientActivity).createPopUpInfoChange();
