@@ -1,11 +1,11 @@
-package com.example.drugmaster.Model.drugmodel;
+package com.example.drugmaster.Model.managermodel;
 
 import android.app.Activity;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.drugmaster.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,15 +15,16 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class DrugRequest {
-    private ListView drugView;
-    private ArrayList<Drug> drugarray;
+public class ManagerRequest {
+    private ListView managerView;
+    private ArrayList<User> managerArray;
     private Activity activity;
     private String search;
-    public DrugRequest(ListView drugView,Activity activity) {
-        this.drugView = drugView;
+
+    public ManagerRequest(ListView managerView, Activity activity) {
+        this.managerView = managerView;
+        this.managerArray = new ArrayList<>();
         this.activity = activity;
-        drugarray = new ArrayList<>();
     }
 
     public void request(){
@@ -32,15 +33,15 @@ public class DrugRequest {
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                drugarray.clear();
+                managerArray.clear();
                 for (DataSnapshot drugSnapshot: dataSnapshot.getChildren()){
-                    Drug drug = drugSnapshot.getValue(Drug.class);
+                    User user = drugSnapshot.getValue(User.class);
 
-                    drugarray.add(drug);
+                    managerArray.add(user);
                 }
 
-                Druglist adapter = new Druglist(activity,drugarray);
-                drugView.setAdapter(adapter);
+                Managerlist adapter = new Managerlist(activity,managerArray);
+                managerView.setAdapter(adapter);
             }
 
             @Override
@@ -56,15 +57,15 @@ public class DrugRequest {
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                drugarray.clear();
+                managerArray.clear();
                 for (DataSnapshot drugSnapshot: dataSnapshot.getChildren()){
-                    Drug drug = drugSnapshot.getValue(Drug.class);
-                    if(isHave(Objects.requireNonNull(drug)))
-                        drugarray.add(drug);
+                    User user = drugSnapshot.getValue(User.class);
+                    if(isHave(Objects.requireNonNull(user)))
+                        managerArray.add(user);
                 }
 
-                Druglist adapter = new Druglist(activity,drugarray);
-                drugView.setAdapter(adapter);
+                Managerlist adapter = new Managerlist(activity,managerArray);
+                managerView.setAdapter(adapter);
             }
 
             @Override
@@ -74,29 +75,17 @@ public class DrugRequest {
         });
     }
 
-    private boolean isHave(Drug drug) {
-        if (drug.getName().contains(search))
+    private boolean isHave(User manager) {
+        if (manager.getOrgname().contains(search))
             return true;
-        if (drug.getMaker().contains(search))
-            return true;
-        if (drug.getUnit().contains(search))
-            return true;
-
-        return drug.getPrice().contains(search);
+        return manager.getEmail().contains(search);
     }
 
     private DatabaseReference getReference(){
         return FirebaseDatabase.
                 getInstance().
-                getReference("drugs").
-                child(
-                        Objects.requireNonNull(
-                                Objects.requireNonNull(
-                                        FirebaseAuth.
-                                                getInstance().
-                                                getCurrentUser()
-                                ).getDisplayName()
-                        )
-                );
+                getReference().
+                child("users").
+                child("managers");
     }
 }

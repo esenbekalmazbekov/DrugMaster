@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,7 +47,7 @@ public class Registration extends AppCompatActivity{
     private CircleImageView imgUserPhoto;
     static int PReqCode = 1 ;
     static int REQUESCODE = 1 ;
-    Uri pickedImgUri ;
+    private Uri pickedImgUri ;
 
     // registration
     private EditText orgName,password,repassword,email,phone,address,regcode;
@@ -134,63 +135,79 @@ public class Registration extends AppCompatActivity{
 
     private void goToRegistration(){
 
-        user = new User(
-                this.regcode.getText().toString(),
-                this.orgName.getText().toString(),
-                this.email.getText().toString(),
-                this.phone.getText().toString(),
-                this.address.getText().toString(),
-                status);
-
-
-
         mAuth.createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            try {
+                                StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("users_photos");
+                                final StorageReference imageFilePath = mStorage.child(Objects.requireNonNull(pickedImgUri.getLastPathSegment()));
 
-                            StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("users_photos");
-                            final StorageReference imageFilePath = mStorage.child(Objects.requireNonNull(pickedImgUri.getLastPathSegment()));
-                            imageFilePath.putFile(pickedImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    Registration.this.showMessage("onSuccess");
-                                    imageFilePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-                                            UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
-                                                    .setDisplayName(user.getId())
-                                                    .setPhotoUri(uri)
-                                                    .build();
+                                imageFilePath.putFile(pickedImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        Registration.this.showMessage("onSuccess");
+                                        imageFilePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                                user = new User(
+                                                        Registration.this.regcode.getText().toString(),
+                                                        Registration.this.orgName.getText().toString(),
+                                                        Registration.this.email.getText().toString(),
+                                                        Registration.this.phone.getText().toString(),
+                                                        Registration.this.address.getText().toString(),
+                                                        status,uri.toString());
 
+                                                UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                                                        .setDisplayName(user.getId())
+                                                        .setPhotoUri(uri)
+                                                        .build();
 
-                                            Objects.requireNonNull(mAuth.getCurrentUser()).updateProfile(profileUpdate)
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            if (task.isSuccessful()) {
-                                                                showMessage("Регистрация прошла успешна!!!");
+                                                Objects.requireNonNull(mAuth.getCurrentUser()).updateProfile(profileUpdate)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    showMessage("Регистрация прошла успешна!!!");
+                                                                }
                                                             }
+                                                        });
 
-                                                            updateUI();
+                                                userdatabase = FirebaseDatabase.getInstance().getReference();
 
-                                                            userdatabase = FirebaseDatabase.getInstance().getReference();
+                                                if (user.getStatus().equals("manager"))
+                                                    userdatabase.child("users").child("managers").child(user.getId()).setValue(user);
+                                                else
+                                                    userdatabase.child("users").child("clients").child(user.getId()).setValue(user);
 
-                                                            if (user.getStatus().equals("manager"))
-                                                                userdatabase.child("users").child("managers").child(user.getId()).setValue(user);
-                                                            else
-                                                                userdatabase.child("users").child("clients").child(user.getId()).setValue(user);
+                                                updateUI();
 
-                                                            submit.setVisibility(View.VISIBLE);
-                                                            progressBar.setVisibility(View.INVISIBLE);
+                                                submit.setVisibility(View.VISIBLE);
+                                                progressBar.setVisibility(View.INVISIBLE);
+                                            }
+                                        });
+                                    }
+                                });
+                            }catch (NullPointerException e){
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                                                        }
-                                                    });
-                                        }
-                                    });
+                                if (user != null) {
+                                    user.delete()
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        showMessage("Забыли фото!");
+                                                    }
+                                                }
+                                            });
                                 }
-                            });
+
+                                submit.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.INVISIBLE);
+                            }
+
                         } else {
                             Registration.this.showMessage("Ошибка!!!");
                             submit.setVisibility(View.VISIBLE);

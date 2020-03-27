@@ -14,27 +14,30 @@ public class User implements Parcelable {
     private String address;
     private String status;
     private String id;
+    private String profileUri;
+
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String id,String orgname, String email, String phone, String address,String status) {
+    public User(String id,String orgname, String email, String phone, String address,String status,String profileUri) {
         this.id = id;
         this.orgname = orgname;
         this.email = email;
         this.phone = phone;
         this.address = address;
         this.status = status;
+        this.profileUri = profileUri;
     }
 
-
-    private User(Parcel in) {
+    protected User(Parcel in) {
         orgname = in.readString();
         email = in.readString();
         phone = in.readString();
         address = in.readString();
         status = in.readString();
         id = in.readString();
+        profileUri = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -73,6 +76,10 @@ public class User implements Parcelable {
         this.phone = phone;
     }
 
+    public String getProfileUri() {
+        return profileUri;
+    }
+
     public void setAddress(String address) {
         this.address = address;
     }
@@ -98,5 +105,6 @@ public class User implements Parcelable {
         dest.writeString(address);
         dest.writeString(status);
         dest.writeString(id);
+        dest.writeString(profileUri);
     }
 }
