@@ -64,7 +64,6 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
         }
     }
 
-
     private void setHeader() {
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
@@ -82,25 +81,42 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if(!InfoFragment.own){
+                InfoFragment.own = true;
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container_client,new ManagerFragment())
+                        .commit();
+            }else
+                super.onBackPressed();
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1){
-            if(resultCode == RESULT_OK){
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
                 user = Objects.requireNonNull(data).getParcelableExtra("userdata");
                 setHeader();
                 finish();
             }
         }
     }
+
     public void createPopUpInfoChange() {
         Intent intent = new Intent(ClientActivity.this, PopupInfo.class);
         intent.putExtra("userdata",user);
         startActivityForResult(intent,1);
     }
+
+    public void openNewFragments(String fragment){
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container_client,new InfoFragment())
+                .commit();
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){

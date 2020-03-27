@@ -24,7 +24,12 @@ public class ManagerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragment = inflater.inflate(R.layout.fragment_manager,container,false);
         initialize(fragment);
-
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ManagerRequest(managers,getActivity()).request(searchtext.getText().toString());
+            }
+        });
         return fragment;
     }
 

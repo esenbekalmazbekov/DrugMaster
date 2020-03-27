@@ -30,6 +30,7 @@
             android:id="@+id/search"
             android:layout_width="0dp"
             android:layout_height="30sp"
+            android:layout_marginEnd="8dp"
             android:background="#ff0055"
             android:layout_marginVertical="8dp"
             android:layout_weight="1"

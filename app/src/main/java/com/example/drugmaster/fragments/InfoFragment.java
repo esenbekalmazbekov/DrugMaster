@@ -15,11 +15,13 @@ import com.example.drugmaster.Activities.ClientActivity;
 import com.example.drugmaster.Activities.ManagerActivity;
 import com.example.drugmaster.Model.User;
 import com.example.drugmaster.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
 public class InfoFragment extends Fragment {
     public static final int INFO_FRAGMENT = 1;
+    public static boolean own = true;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,18 +41,25 @@ public class InfoFragment extends Fragment {
         status.setText(user.getStatus());
         Button change = fragment.findViewById(R.id.changebtn);
 
-        change.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(user.getStatus().equals("manager")){
-                    ManagerActivity managerActivity = (ManagerActivity)getActivity();
-                    Objects.requireNonNull(managerActivity).createPopUpInfoChange(INFO_FRAGMENT,null);
-                }else {
-                    ClientActivity clientActivity = (ClientActivity)getActivity();
-                    Objects.requireNonNull(clientActivity).createPopUpInfoChange();
+        if(!Objects.equals(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName(), user.getId())){
+            change.setVisibility(View.INVISIBLE);
+            own = false;
+        }
+        else {
+            change.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(user.getStatus().equals("manager")){
+                        ManagerActivity managerActivity = (ManagerActivity)getActivity();
+                        Objects.requireNonNull(managerActivity).createPopUpInfoChange(INFO_FRAGMENT,null);
+                    }else {
+                        ClientActivity clientActivity = (ClientActivity)getActivity();
+                        Objects.requireNonNull(clientActivity).createPopUpInfoChange();
+                    }
                 }
-            }
-        });
+            });
+        }
+
         return fragment;
     }
 
