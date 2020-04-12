@@ -47,7 +47,7 @@ public class Managerlist extends ArrayAdapter<User> {
         ImageButton data = listViewItem.findViewById(R.id.databtn);
 
         info.setOnClickListener(new ImageBtnListerer(activity,"info",user));
-
+        data.setOnClickListener(new ImageBtnListerer(activity,"data",user));
         return listViewItem;
     }
 
@@ -106,7 +106,8 @@ class ImageBtnListerer implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        activity.getIntent().putExtra("userdata",user);
+        ClientActivity.own = false;
+        activity.getIntent().putExtra("managerdata",user);
         ClientActivity act = (ClientActivity)activity;
         act.openNewFragments(fragment);
     }

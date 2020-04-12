@@ -20,6 +20,7 @@ import com.example.drugmaster.Model.User;
 import com.example.drugmaster.R;
 import com.example.drugmaster.fragments.BasketFragment;
 import com.example.drugmaster.fragments.InfoFragment;
+import com.example.drugmaster.fragments.ListFragment;
 import com.example.drugmaster.fragments.ManagerFragment;
 import com.example.drugmaster.fragments.SearchFragment;
 import com.example.drugmaster.popups.PopupInfo;
@@ -34,6 +35,7 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
     Toolbar toolbar;
     private DrawerLayout drawer;
     private User user;
+    public static boolean own = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +83,8 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if(!InfoFragment.own){
-                InfoFragment.own = true;
+            if(!ClientActivity.own){
+                ClientActivity.own = true;
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container_client,new ManagerFragment())
@@ -111,14 +113,21 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
     }
 
     public void openNewFragments(String fragment){
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container_client,new InfoFragment())
-                .commit();
+        if(fragment.equals("info")){
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container_client,new InfoFragment())
+                    .commit();
+        }else {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container_client,new ListFragment())
+                    .commit();
+        }
     }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        own = true;
         switch (menuItem.getItemId()){
             case R.id.nav_info:
                 getSupportFragmentManager()

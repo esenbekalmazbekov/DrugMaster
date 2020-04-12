@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public class Drug implements Parcelable,Cloneable {
+public class Drug implements Parcelable,Cloneable{
     private String id;
     private String name;
     private String unit;

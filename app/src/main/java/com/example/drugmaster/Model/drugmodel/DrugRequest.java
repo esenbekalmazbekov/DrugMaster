@@ -1,11 +1,13 @@
 package com.example.drugmaster.Model.drugmodel;
 
 import android.app.Activity;
+import android.view.View;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.drugmaster.Model.ordermodel.Order;
+import com.example.drugmaster.fragments.ListFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,15 +22,19 @@ public class DrugRequest {
     private ArrayList<Drug> drugarray;
     private Activity activity;
     private String search;
-    public DrugRequest(ListView drugView,Activity activity) {
+    private Druglist druglist;
+    private Order order;
+
+
+    public DrugRequest(ListView drugView,Activity activity,Order order) {
         this.drugView = drugView;
         this.activity = activity;
         drugarray = new ArrayList<>();
+        this.order = order;
     }
 
     public void request(){
         DatabaseReference db = getReference();
-
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -39,8 +45,9 @@ public class DrugRequest {
                     drugarray.add(drug);
                 }
 
-                Druglist adapter = new Druglist(activity,drugarray);
-                drugView.setAdapter(adapter);
+                druglist = new Druglist(activity,drugarray,order);
+                drugView.setAdapter(druglist);
+                ListFragment.getProgressBar().setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -63,7 +70,7 @@ public class DrugRequest {
                         drugarray.add(drug);
                 }
 
-                Druglist adapter = new Druglist(activity,drugarray);
+                Druglist adapter = new Druglist(activity,drugarray,order);
                 drugView.setAdapter(adapter);
             }
 
@@ -89,14 +96,6 @@ public class DrugRequest {
         return FirebaseDatabase.
                 getInstance().
                 getReference("drugs").
-                child(
-                        Objects.requireNonNull(
-                                Objects.requireNonNull(
-                                        FirebaseAuth.
-                                                getInstance().
-                                                getCurrentUser()
-                                ).getDisplayName()
-                        )
-                );
+                child(order.getManagerID());
     }
 }

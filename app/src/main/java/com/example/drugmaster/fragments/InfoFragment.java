@@ -15,19 +15,37 @@ import com.example.drugmaster.Activities.ClientActivity;
 import com.example.drugmaster.Activities.ManagerActivity;
 import com.example.drugmaster.Model.User;
 import com.example.drugmaster.R;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
 public class InfoFragment extends Fragment {
     public static final int INFO_FRAGMENT = 1;
-    public static boolean own = true;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragment = inflater.inflate(R.layout.fragment_info,container,false);
-        final User user = Objects.requireNonNull(getActivity()).getIntent().getParcelableExtra("userdata");
+        final User user;
+        Button change = fragment.findViewById(R.id.changebtn);
 
+        if(!ClientActivity.own){
+            change.setVisibility(View.INVISIBLE);
+            user = Objects.requireNonNull(getActivity()).getIntent().getParcelableExtra("managerdata");
+        }
+        else {
+            user = Objects.requireNonNull(getActivity()).getIntent().getParcelableExtra("userdata");
+            change.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(Objects.requireNonNull(user).getStatus().equals("manager")){
+                        ManagerActivity managerActivity = (ManagerActivity)getActivity();
+                        Objects.requireNonNull(managerActivity).createPopUpInfoChange(INFO_FRAGMENT,null);
+                    }else {
+                        ClientActivity clientActivity = (ClientActivity)getActivity();
+                        Objects.requireNonNull(clientActivity).createPopUpInfoChange();
+                    }
+                }
+            });
+        }
         TextView orgName = fragment.findViewById(R.id.orgName)
                 ,email = fragment.findViewById(R.id.mail)
                 ,phone = fragment.findViewById(R.id.phone)
@@ -39,26 +57,6 @@ public class InfoFragment extends Fragment {
         phone.setText(user.getPhone());
         address.setText(user.getAddress());
         status.setText(user.getStatus());
-        Button change = fragment.findViewById(R.id.changebtn);
-
-        if(!Objects.equals(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName(), user.getId())){
-            change.setVisibility(View.INVISIBLE);
-            own = false;
-        }
-        else {
-            change.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(user.getStatus().equals("manager")){
-                        ManagerActivity managerActivity = (ManagerActivity)getActivity();
-                        Objects.requireNonNull(managerActivity).createPopUpInfoChange(INFO_FRAGMENT,null);
-                    }else {
-                        ClientActivity clientActivity = (ClientActivity)getActivity();
-                        Objects.requireNonNull(clientActivity).createPopUpInfoChange();
-                    }
-                }
-            });
-        }
 
         return fragment;
     }
