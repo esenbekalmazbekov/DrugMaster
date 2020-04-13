@@ -31,6 +31,10 @@
         android:textSize="17sp"
         android:text="@string/textview"
         tools:ignore="RtlSymmetry" />
+    <ListView
+        android:id="@+id/shortDrugList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,7 +52,7 @@
             android:layout_marginHorizontal="20sp"
             android:layout_weight="2"
             android:background="@drawable/sing_in_button"
-            android:text="@string/singin"
+            android:text="@string/delete"
             android:textColor="@color/colorPrimaryDark"
             tools:ignore="ButtonStyle" />
 
@@ -64,10 +68,4 @@
             android:textColor="@color/colorPrimaryDark"
             tools:ignore="ButtonStyle,RtlHardcoded" />
     </LinearLayout>
-
-
-
-
-
-
 </LinearLayout>
