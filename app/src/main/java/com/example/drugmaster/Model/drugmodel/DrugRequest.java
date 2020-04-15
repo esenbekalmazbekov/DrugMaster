@@ -33,6 +33,31 @@ public class DrugRequest {
         this.order = order;
     }
 
+    public void getshortlist(){
+        DatabaseReference db = getReference();
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                drugarray.clear();
+                for (DataSnapshot drugSnapshot: dataSnapshot.getChildren()){
+                    Drug drug = drugSnapshot.getValue(Drug.class);
+
+                    if (drug != null && order.getDrugs().containsKey(drug.getId()))
+                        drugarray.add(drug);
+                }
+
+                ShortDrugList shortDrugList = new ShortDrugList(activity,drugarray,order);
+                drugView.setAdapter(shortDrugList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
     public void request(){
         DatabaseReference db = getReference();
         db.addValueEventListener(new ValueEventListener() {
@@ -98,4 +123,6 @@ public class DrugRequest {
                 getReference("drugs").
                 child(order.getManagerID());
     }
+
+    public ArrayList<Drug> getDrugarray() {return drugarray; }
 }

@@ -44,6 +44,9 @@
     <string name="plus">+</string>
     <string name="minus">-</string>
     <string name="itogo">Итого:</string>
+    <string name="orderprice">Стоимость заказа</string>
+    <string name="orderlist">Список заказа:</string>
+    <string name="close">Закрыть</string>
 
     <array name="unit">
         <item>Упаковка</item>

@@ -16,15 +16,18 @@
         android:hardwareAccelerated="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@drawable/ic_launcher_round"
         android:supportsRtl="true"
-        android:largeHeap="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:theme="@style/AppTheme.NoActionBar"
+            android:name=".Activities.RefactorActivty"
+            tools:ignore="InnerclassSeparator"/>
+        <activity
             android:name=".popups.PopupAdddrugs"
-            android:theme="@style/AppTheme.PopMe"
-            />
+            android:theme="@style/AppTheme.PopMe" />
         <activity
             android:name=".popups.PopupInfo"
             android:theme="@style/AppTheme.PopMe"

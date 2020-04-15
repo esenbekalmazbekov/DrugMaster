@@ -86,8 +86,11 @@ public class Druglist extends ArrayAdapter<Drug> {
             public void onClick(View v) {
                 if(box.isChecked()){
                     order.getDrugs().put(drug.getId(),1);
-                }else
+                    order.setCost(order.getCost() + Double.parseDouble(drug.getPrice()));
+                }else{
                     order.getDrugs().remove(drug.getId());
+                    order.setCost(order.getCost() - Double.parseDouble(drug.getPrice()));
+                }
             }
         });
 

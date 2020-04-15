@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:paddingHorizontal="13sp"
+    android:background="#e8e8e8"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="25sp"
+        android:layout_height="37sp"
         android:padding="2sp"
         android:orientation="horizontal">
 
@@ -15,7 +18,7 @@
             android:layout_width="0dp"
             android:paddingStart="8sp"
             android:paddingVertical="3sp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="5"
             android:text="@string/textview"
             tools:ignore="RtlSymmetry" />
@@ -28,7 +31,7 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="25sp"
+        android:layout_height="wrap_content"
         android:padding="2sp"
         android:orientation="horizontal">
 
@@ -37,7 +40,7 @@
             android:layout_width="0dp"
             android:paddingStart="8sp"
             android:paddingVertical="3sp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="5"
             android:text="@string/textview"
             tools:ignore="RtlSymmetry" />
@@ -48,7 +51,7 @@
             android:paddingStart="8sp"
             android:textColor="#123b16"
             android:paddingVertical="3sp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/textview"
             tools:ignore="RtlSymmetry" />
 
@@ -78,18 +81,22 @@
             android:id="@+id/plus"
             android:layout_width="35dp"
             android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:text="@string/plus"/>
 
         <Button
             android:id="@+id/minus"
             android:layout_width="35dp"
             android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:text="@string/minus"/>
 
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30sp"
+        android:layout_height="wrap_content"
         android:padding="2sp"
         android:orientation="horizontal">
 
@@ -97,7 +104,7 @@
             android:layout_width="0dp"
             android:paddingStart="8sp"
             android:paddingVertical="3sp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="5"
             android:textSize="18sp"
             android:textColor="#123b16"
@@ -109,8 +116,9 @@
             android:layout_width="wrap_content"
             android:paddingStart="8sp"
             android:paddingVertical="3sp"
+            android:textSize="18sp"
             android:textColor="#123b16"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/textview"
             tools:ignore="RtlSymmetry" />
 

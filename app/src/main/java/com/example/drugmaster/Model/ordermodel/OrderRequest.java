@@ -5,6 +5,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 
+import com.example.drugmaster.Activities.RefactorActivty;
 import com.example.drugmaster.Model.User;
 import com.example.drugmaster.Model.drugmodel.DrugRequest;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +26,36 @@ public class OrderRequest {
         this.drugView = drugView;
         manager = activity.getIntent().getParcelableExtra("managerdata");
         client = activity.getIntent().getParcelableExtra("userdata");
+    }
+    public OrderRequest(Activity activity,ListView drugView){
+        this.activity = activity;
+        this.drugView = drugView;
+        manager = activity.getIntent().getParcelableExtra("managerdata");
+        client = activity.getIntent().getParcelableExtra("userdata");
+    }
+
+    public void requestShortOrder(){
+        FirebaseDatabase.getInstance().getReference("orders").
+                child("clients").
+                child(client.getId()).
+                child(manager.getId()).
+                addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        order = dataSnapshot.getValue(Order.class);
+
+                        if(order == null)
+                            order = new Order(manager.getId());
+
+                        RefactorActivty refactorActivty = (RefactorActivty)activity;
+                        refactorActivty.createOrderCopy(order);
+                        drugRequest = new DrugRequest(drugView,activity,order);
+                        drugRequest.getshortlist();
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }});
     }
 
     public void requestSimpleOrder(){
@@ -50,7 +81,9 @@ public class OrderRequest {
     }
 
     public void changeSimpleOrder(){
+
         if (order.getDrugs().size()!=0){
+
             FirebaseDatabase.getInstance().getReference().
                     child("orders").child("clients").
                     child(client.getId()).
@@ -77,4 +110,10 @@ public class OrderRequest {
                     child(client.getId()).setValue(null);
         }
     }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public DrugRequest getDrugRequest(){return drugRequest;}
 }
