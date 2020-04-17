@@ -47,6 +47,7 @@
     <string name="orderprice">Стоимость заказа</string>
     <string name="orderlist">Список заказа:</string>
     <string name="close">Закрыть</string>
+    <string name="_1">1</string>
 
     <array name="unit">
         <item>Упаковка</item>

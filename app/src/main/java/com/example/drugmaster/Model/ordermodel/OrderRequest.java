@@ -48,7 +48,6 @@ public class OrderRequest {
                             order = new Order(manager.getId());
 
                         RefactorActivty refactorActivty = (RefactorActivty)activity;
-                        refactorActivty.createOrderCopy(order);
                         drugRequest = new DrugRequest(drugView,activity,order);
                         drugRequest.getshortlist();
                     }

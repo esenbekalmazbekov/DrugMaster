@@ -10,7 +10,7 @@
         android:title="@string/save"
         android:id="@+id/save"
         android:icon="@drawable/ic_save"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
     <item
         android:title="@string/close"
         android:id="@+id/close"

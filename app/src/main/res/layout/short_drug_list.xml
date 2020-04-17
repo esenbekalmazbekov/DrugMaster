@@ -67,15 +67,16 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="5"
+            android:autofillHints=""
+            android:hint="@string/_1"
             android:inputType="number"
             android:paddingVertical="3sp"
             android:paddingStart="8sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="#0C0B0B"
-            android:textColorHint="#FFFFFF"
+            android:textColorHint="@color/colorAccent"
             android:textColorLink="@color/colorPrimaryDark"
-            tools:ignore="LabelFor,RtlSymmetry"
-            android:autofillHints="" />
+            tools:ignore="LabelFor,RtlSymmetry" />
 
         <Button
             android:id="@+id/plus"
