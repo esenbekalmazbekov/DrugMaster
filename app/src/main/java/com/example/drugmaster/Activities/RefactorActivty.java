@@ -38,11 +38,21 @@ public class RefactorActivty extends AppCompatActivity{
         deletedrugs = new ArrayList<>();
         setSupportActionBar(toolbar);
 
-        User manager = getIntent().getParcelableExtra("managerdata");
 
-        if (manager != null) {
-            toolbar.setTitle(manager.getOrgname());
-            userEmail.setText(manager.getEmail());
+        boolean isManager = getIntent().getBooleanExtra("manager", false);
+        if(isManager){
+            User user = getIntent().getParcelableExtra("userdata");
+            if (user != null) {
+                toolbar.setTitle(user.getOrgname());
+                userEmail.setText(user.getEmail());
+            }
+        }
+        else {
+            User user = getIntent().getParcelableExtra("managerdata");
+            if (user != null) {
+                toolbar.setTitle(user.getOrgname());
+                userEmail.setText(user.getEmail());
+            }
         }
 
         orderRequest = new OrderRequest(RefactorActivty.this, orderView);

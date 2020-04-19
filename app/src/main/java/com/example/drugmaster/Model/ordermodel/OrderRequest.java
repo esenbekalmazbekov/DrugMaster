@@ -5,7 +5,6 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 
-import com.example.drugmaster.Activities.RefactorActivty;
 import com.example.drugmaster.Model.User;
 import com.example.drugmaster.Model.drugmodel.DrugRequest;
 import com.google.firebase.database.DataSnapshot;
@@ -47,7 +46,6 @@ public class OrderRequest {
                         if(order == null)
                             order = new Order(manager.getId());
 
-                        RefactorActivty refactorActivty = (RefactorActivty)activity;
                         drugRequest = new DrugRequest(drugView,activity,order);
                         drugRequest.getshortlist();
                     }
