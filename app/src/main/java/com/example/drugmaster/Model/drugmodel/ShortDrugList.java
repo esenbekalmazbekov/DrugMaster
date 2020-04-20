@@ -28,12 +28,13 @@ public class ShortDrugList extends ArrayAdapter<Drug> {
     private Activity activity;
     private ArrayList<Drug> drugArrayList;
     private Order order;
-
-    ShortDrugList(Activity activity, ArrayList<Drug> drugArrayList, Order order) {
+    private boolean isManager;
+    ShortDrugList(Activity activity, ArrayList<Drug> drugArrayList, Order order,boolean isManager) {
         super(activity, R.layout.short_drug_list,drugArrayList);
         this.activity = activity;
         this.drugArrayList = drugArrayList;
         this.order = order;
+        this.isManager = isManager;
     }
 
     @NonNull
@@ -60,38 +61,122 @@ public class ShortDrugList extends ArrayAdapter<Drug> {
         Button plus = listViewItem.findViewById(R.id.plus);
         final Button minus = listViewItem.findViewById(R.id.minus);
 
-        count.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        if(isManager){
+            if(order.getStatus().equals("Заказ Отправлен")){
+                count.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(!count.getText().toString().equals("")){
-                    int i = Integer.parseInt(count.getText().toString());
-                    if(i <= 0){
-                        Toast.makeText(activity, "Количество должно быть больше нуля!", Toast.LENGTH_LONG).show();
-                        count.setText("" + 1);
-                    }else{
-                        double d;
-                        order.getDrugs().put(drugArrayList.get(position).getId(),i);
-                        d = i * Double.parseDouble(drugArrayList.get(position).getPrice());
-                        d = d * 100;
-                        i = (int)d;
-                        d =  (double)i / 100;
-                        itog.setText( d + "сом");
-                        iflessThanOne(count,minus);
                     }
-                }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if(!count.getText().toString().equals("")){
+                            int i = Integer.parseInt(count.getText().toString());
+                            if(i <= 0){
+                                Toast.makeText(activity, "Количество должно быть больше нуля!", Toast.LENGTH_LONG).show();
+                                count.setText("" + 1);
+                            }else{
+                                double d;
+                                order.getDrugs().put(drugArrayList.get(position).getId(),i);
+                                d = i * Double.parseDouble(drugArrayList.get(position).getPrice());
+                                d = d * 100;
+                                i = (int)d;
+                                d =  (double)i / 100;
+                                itog.setText( d + "сом");
+                                iflessThanOne(count,minus);
+                            }
+                        }
+                    }
+                });
+                boxlistener(box,position);
+
+                plus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int i = Integer.parseInt(count.getText().toString())+1;
+                        newCost(i,count,position,itog,minus);
+                    }
+                });
+
+                minus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int i = Integer.parseInt(count.getText().toString())-1;
+                        newCost(i,count,position,itog,minus);
+                    }
+                });
             }
-        });
-        boxlistener(box,position);
+            else {
+                count.setEnabled(false);
+                plus.setVisibility(View.INVISIBLE);
+                minus.setVisibility(View.INVISIBLE);
+                box.setVisibility(View.INVISIBLE);
+            }
+        }else {
+            if(order.getStatus().equals("Заказ Создан")){
+                count.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if(!count.getText().toString().equals("")){
+                            int i = Integer.parseInt(count.getText().toString());
+                            if(i <= 0){
+                                Toast.makeText(activity, "Количество должно быть больше нуля!", Toast.LENGTH_LONG).show();
+                                count.setText("" + 1);
+                            }else{
+                                double d;
+                                order.getDrugs().put(drugArrayList.get(position).getId(),i);
+                                d = i * Double.parseDouble(drugArrayList.get(position).getPrice());
+                                d = d * 100;
+                                i = (int)d;
+                                d =  (double)i / 100;
+                                itog.setText( d + "сом");
+                                iflessThanOne(count,minus);
+                            }
+                        }
+                    }
+                });
+                boxlistener(box,position);
+
+                plus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int i = Integer.parseInt(count.getText().toString())+1;
+                        newCost(i,count,position,itog,minus);
+                    }
+                });
+
+                minus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int i = Integer.parseInt(count.getText().toString())-1;
+                        newCost(i,count,position,itog,minus);
+                    }
+                });
+            }
+            else {
+                count.setEnabled(false);
+                plus.setVisibility(View.INVISIBLE);
+                minus.setVisibility(View.INVISIBLE);
+                box.setVisibility(View.INVISIBLE);
+            }
+        }
+
 
         drugname.setText(drugArrayList.get(position).getName());
         unit.setText(drugArrayList.get(position).getUnit());
@@ -99,22 +184,6 @@ public class ShortDrugList extends ArrayAdapter<Drug> {
 
         int i = Objects.requireNonNull(order.getDrugs().get(drugArrayList.get(position).getId()));
         newCost(i,count,position,itog,minus);
-
-        plus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int i = Integer.parseInt(count.getText().toString())+1;
-                newCost(i,count,position,itog,minus);
-            }
-        });
-
-        minus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int i = Integer.parseInt(count.getText().toString())-1;
-                newCost(i,count,position,itog,minus);
-            }
-        });
     }
     @SuppressLint("SetTextI18n")
     private void newCost(int i, EditText count, int position, TextView itog,Button minus){

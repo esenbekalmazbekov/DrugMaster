@@ -88,6 +88,7 @@ public class ListFragment extends Fragment {
         if (ClientActivity.own)
             drugRequest.request();
     }
+
     private void initialize(View fragment) {
         addDrugs = fragment.findViewById(R.id.addbutton);
         drugView = fragment.findViewById(R.id.listOfDrugs);

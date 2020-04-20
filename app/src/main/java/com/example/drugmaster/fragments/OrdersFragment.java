@@ -48,9 +48,12 @@ public class OrdersFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                OrdersFragment.this.orderStatuses.clear();
+                OrdersFragment.this.orders.clear();
                 for (DataSnapshot snapshot:dataSnapshot.getChildren()){
                     OrderStatus orderStatus = snapshot.getValue(OrderStatus.class);
-                    OrdersFragment.this.orderStatuses.add(orderStatus);
+                    if(!orderStatus.getStatus().equals("Заказ Создан"))
+                        OrdersFragment.this.orderStatuses.add(orderStatus);
                 }
                 readOrders();
             }

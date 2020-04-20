@@ -35,8 +35,13 @@ public class AllOrdersRequest{
 
     public void requestforManagers(){
         OrderlistForManager orderlist;
-        orderlist = new OrderlistForManager(activity,orderArrayList,orderStatuses);
-        orderView.setAdapter(orderlist);
+        try {
+            orderlist = new OrderlistForManager(activity,orderArrayList,orderStatuses);
+            orderView.setAdapter(orderlist);
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
     }
 
     public void request(){

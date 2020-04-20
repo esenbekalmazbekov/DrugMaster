@@ -1,12 +1,16 @@
 package com.example.drugmaster.Model.ordermodel;
 
 import android.app.Activity;
+import android.view.View;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 
+import com.example.drugmaster.Activities.ClientActivity;
 import com.example.drugmaster.Model.User;
 import com.example.drugmaster.Model.drugmodel.DrugRequest;
+import com.example.drugmaster.fragments.ListFragment;
+import com.example.drugmaster.popups.DialogBox;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -33,7 +37,7 @@ public class OrderRequest {
         client = activity.getIntent().getParcelableExtra("userdata");
     }
 
-    public void requestShortOrder(){
+    public void requestShortOrder(final boolean isManager){
         FirebaseDatabase.getInstance().getReference("orders").
                 child("clients").
                 child(client.getId()).
@@ -47,7 +51,7 @@ public class OrderRequest {
                             order = new Order(manager.getId());
 
                         drugRequest = new DrugRequest(drugView,activity,order);
-                        drugRequest.getshortlist();
+                        drugRequest.getshortlist(isManager);
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -68,8 +72,15 @@ public class OrderRequest {
                         if(order == null)
                             order = new Order(manager.getId());
 
-                        drugRequest = new DrugRequest(drugView,activity,order);
-                        drugRequest.request();
+                        if (!order.getStatus().equals("Заказ Создан")){
+                            DialogBox dialogBox = new DialogBox("Внимание!","У вас уже есть заказ с этого Менеджера");
+                            ClientActivity clientActivity = (ClientActivity)activity;
+                            dialogBox.show(clientActivity.getSupportFragmentManager(),"example dialog");
+                            ListFragment.getProgressBar().setVisibility(View.INVISIBLE);
+                        }else {
+                            drugRequest = new DrugRequest(drugView,activity,order);
+                            drugRequest.request();
+                        }
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {

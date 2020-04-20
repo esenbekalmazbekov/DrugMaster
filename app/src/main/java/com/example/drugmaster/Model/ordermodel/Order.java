@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class Order{
     private String managerID;
     private HashMap<String,Integer> drugs;
-    private String status = "СинийC";
+    private String status = "Заказ Создан";
     private Double cost;
 
     public Order(String managerID){

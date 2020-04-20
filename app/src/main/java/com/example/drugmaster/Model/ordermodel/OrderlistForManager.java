@@ -3,6 +3,7 @@ package com.example.drugmaster.Model.ordermodel;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public class OrderlistForManager extends ArrayAdapter<Order> {
     private Activity activity;
     private ArrayList<Order> orders;
     private ArrayList<OrderStatus> statuses;
-    OrderlistForManager(Activity activity, ArrayList<Order> orders,ArrayList<OrderStatus> statuses){
+    OrderlistForManager(Activity activity, ArrayList<Order> orders,ArrayList<OrderStatus> statuses) throws NullPointerException{
         super(activity, R.layout.basket_list,orders);
         this.activity = activity;
         this.orders = orders;
@@ -69,7 +70,7 @@ public class OrderlistForManager extends ArrayAdapter<Order> {
     private void initialization(final View view, final int position, final User client){
         TextView firmname = view.findViewById(R.id.firmname);
         final TextView username = view.findViewById(R.id.userEmail);
-        TextView status = view.findViewById(R.id.status);
+        final TextView status = view.findViewById(R.id.status);
         TextView cost = view.findViewById(R.id.cost);
         ImageButton list = view.findViewById(R.id.databtn);
         final User manager = activity.getIntent().getParcelableExtra("userdata");
@@ -84,25 +85,119 @@ public class OrderlistForManager extends ArrayAdapter<Order> {
             }
         });
 
-        Button deleteOrder = view.findViewById(R.id.delete);
-        deleteOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseDatabase.getInstance().getReference().
-                        child("orders").child("clients").
-                        child(client.getId()).
-                        child(manager.getId()).setValue(null);
+        switch (orders.get(position).getStatus()){
+            case "Заказ Отправлен":{
+                final Button request = view.findViewById(R.id.act);
+                final Button deleteOrder = view.findViewById(R.id.delete);
+                status.setText("Новый заказ");
+                request.setText("Принять");
+                request.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        orders.get(position).setStatus("Заказ Принят");
+                        FirebaseDatabase.getInstance().getReference().
+                                child("orders").child("clients").
+                                child(client.getId()).
+                                child(manager.getId()).setValue(orders.get(position));
 
-                FirebaseDatabase.getInstance().getReference().
-                        child("orders").child("managers").
-                        child(manager.getId()).
-                        child(client.getId()).setValue(null);
+                        OrderStatus newStatus = new OrderStatus(client.getId(),orders.get(position).getStatus());
+
+                        FirebaseDatabase.getInstance().getReference().
+                                child("orders").child("managers").
+                                child(manager.getId()).
+                                child(client.getId()).setValue(newStatus);
+                    }
+                });
+
+                deleteOrder.setText("Отклонить");
+                deleteOrder.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        orders.get(position).setStatus("Заказ Отменен");
+                        FirebaseDatabase.getInstance().getReference().
+                                child("orders").child("clients").
+                                child(client.getId()).
+                                child(manager.getId()).setValue(orders.get(position));
+
+                        OrderStatus newStatus = new OrderStatus(client.getId(),orders.get(position).getStatus());
+
+                        FirebaseDatabase.getInstance().getReference().
+                                child("orders").child("managers").
+                                child(manager.getId()).
+                                child(client.getId()).setValue(newStatus);
+
+                        request.setVisibility(View.INVISIBLE);
+                        deleteOrder.setVisibility(View.INVISIBLE);
+                        status.setTextColor(Color.RED);
+                        status.setText("Заказ Отклонен");
+                    }
+                });
+                status.setTextColor(Color.BLUE);
+            }break;
+            case "Заказ Изменен":{
+                final Button request = view.findViewById(R.id.act);
+                final Button deleteOrder = view.findViewById(R.id.delete);
+                status.setText("Заказ изменен");
+                request.setText("Отправить");
+                request.setVisibility(View.INVISIBLE);
+                deleteOrder.setVisibility(View.INVISIBLE);
+                status.setTextColor(Color.MAGENTA);
+            }break;
+            case "Заказ Принят":{
+                final Button request = view.findViewById(R.id.act);
+                final Button deleteOrder = view.findViewById(R.id.delete);
+
+                status.setText("Заказ принят");
+
+                status.setTextColor(Color.GREEN);
+                request.setVisibility(View.INVISIBLE);
+                deleteOrder.setVisibility(View.INVISIBLE);
+            }break;
+            case "Заказ Получен":{
+                final Button deleteOrder = view.findViewById(R.id.delete);
+                deleteOrder.setVisibility(View.INVISIBLE);
+
+                final Button requrest = view.findViewById(R.id.act);
+                requrest.setText("Получена");
+                requrest.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        orders.get(position).setStatus("Заказ Оплачен");
+                        deleteOrder.setVisibility(View.INVISIBLE);
+                        requrest.setVisibility(View.INVISIBLE);
+                        FirebaseDatabase.getInstance().getReference().
+                                child("orders").child("clients").
+                                child(client.getId()).
+                                child(manager.getId()).setValue(orders.get(position));
+
+                        OrderStatus newStatus = new OrderStatus(client.getId(),orders.get(position).getStatus());
+
+                        FirebaseDatabase.getInstance().getReference().
+                                child("orders").child("managers").
+                                child(manager.getId()).
+                                child(client.getId()).setValue(newStatus);
+                    }
+                });
+                status.setTextColor(Color.YELLOW);
+                status.setText("Ждите оплату");
+            }break;
+            case "Заказ Оплачен":{
+                status.setTextColor(Color.DKGRAY);
+                status.setText("Заказ Оплачен");
+            }break;
+            case "Заказ Отменен":{
+                final Button deleteOrder = view.findViewById(R.id.delete);
+                deleteOrder.setVisibility(View.INVISIBLE);
+                final Button requrest = view.findViewById(R.id.act);
+                requrest.setVisibility(View.INVISIBLE);
+
+                status.setTextColor(Color.RED);
+                status.setText("Заказ Отменен");
             }
-        });
+        }
 
         firmname.setText(client.getOrgname());
         username.setText(client.getEmail());
-        status.setText(statuses.get(position).getStatus());
         cost.setText(orders.get(position).getCost().toString() + "сом");
     }
 }

@@ -66,7 +66,6 @@ public class PopupAdddrugs extends AppCompatActivity {
                 }
             });
         }
-
         cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -76,6 +75,7 @@ public class PopupAdddrugs extends AppCompatActivity {
     }
 
     private void changeDrug() {
+
         if(isEmpties()){
             DatabaseReference db = FirebaseDatabase.getInstance().getReference("drugs");
 
@@ -155,6 +155,5 @@ public class PopupAdddrugs extends AppCompatActivity {
         params.y = -20;
 
         getWindow().setAttributes(params);
-
     }
 }

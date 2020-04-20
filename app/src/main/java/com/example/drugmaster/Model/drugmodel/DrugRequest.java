@@ -33,7 +33,7 @@ public class DrugRequest {
         this.order = order;
     }
 
-    public void getshortlist(){
+    public void getshortlist(final boolean isManager){
         DatabaseReference db = getReference();
         db.addValueEventListener(new ValueEventListener() {
             @Override
@@ -46,7 +46,7 @@ public class DrugRequest {
                         drugarray.add(drug);
                 }
 
-                ShortDrugList shortDrugList = new ShortDrugList(activity,drugarray,order);
+                ShortDrugList shortDrugList = new ShortDrugList(activity,drugarray,order,isManager);
                 drugView.setAdapter(shortDrugList);
             }
 

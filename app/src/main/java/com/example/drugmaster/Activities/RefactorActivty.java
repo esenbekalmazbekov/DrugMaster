@@ -22,7 +22,8 @@ public class RefactorActivty extends AppCompatActivity{
     private MenuItem delete;
     private OrderRequest orderRequest;
     private ArrayList<String> deletedrugs;
-
+    public static boolean ch = false;
+    private boolean isManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,8 +39,7 @@ public class RefactorActivty extends AppCompatActivity{
         deletedrugs = new ArrayList<>();
         setSupportActionBar(toolbar);
 
-
-        boolean isManager = getIntent().getBooleanExtra("manager", false);
+        isManager = getIntent().getBooleanExtra("manager", false);
         if(isManager){
             User user = getIntent().getParcelableExtra("userdata");
             if (user != null) {
@@ -56,8 +56,7 @@ public class RefactorActivty extends AppCompatActivity{
         }
 
         orderRequest = new OrderRequest(RefactorActivty.this, orderView);
-        orderRequest.requestShortOrder();
-
+        orderRequest.requestShortOrder(isManager);
     }
 
     @Override
@@ -77,7 +76,7 @@ public class RefactorActivty extends AppCompatActivity{
                 for(String d : deletedrugs)
                     orderRequest.getOrder().getDrugs().remove(d);
 
-                orderRequest.getDrugRequest().getshortlist();
+                orderRequest.getDrugRequest().getshortlist(isManager);
 
                 delete.setVisible(false);
                 deletedrugs.clear();
@@ -87,6 +86,7 @@ public class RefactorActivty extends AppCompatActivity{
             }break;
             case R.id.close:{
                 finish();
+
             }break;
         }
 
@@ -101,6 +101,8 @@ public class RefactorActivty extends AppCompatActivity{
         int i = (int)d;
         d =  (double)i / 100;
         orderRequest.getOrder().setCost(d);
+        if(isManager && orderRequest.getOrder().getStatus().equals("Заказ Отправлен"))
+            orderRequest.getOrder().setStatus("Заказ Изменен");
         orderRequest.changeSimpleOrder();
     }
     public ArrayList<String> getDeletedrugs() {
