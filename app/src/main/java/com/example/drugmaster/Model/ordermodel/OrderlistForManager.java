@@ -15,9 +15,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.drugmaster.Activities.ClientActivity;
+import com.example.drugmaster.Activities.ManagerActivity;
 import com.example.drugmaster.Activities.RefactorActivty;
 import com.example.drugmaster.Model.User;
 import com.example.drugmaster.R;
+import com.example.drugmaster.fragments.InfoFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -73,6 +76,21 @@ public class OrderlistForManager extends ArrayAdapter<Order> {
         final TextView status = view.findViewById(R.id.status);
         TextView cost = view.findViewById(R.id.cost);
         ImageButton list = view.findViewById(R.id.databtn);
+        ImageButton info = view.findViewById(R.id.infobtn);
+
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClientActivity.own = false;
+                ManagerActivity managerActivity = (ManagerActivity)activity;
+                managerActivity.getIntent().putExtra("managerdata",client);
+                managerActivity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container,new InfoFragment())
+                        .commit();
+            }
+        });
+
         final User manager = activity.getIntent().getParcelableExtra("userdata");
         list.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -16,10 +16,15 @@ import androidx.annotation.Nullable;
 import com.example.drugmaster.Activities.ClientActivity;
 import com.example.drugmaster.Activities.ManagerActivity;
 import com.example.drugmaster.Model.ordermodel.Order;
+import com.example.drugmaster.Model.ordermodel.OrderStatus;
 import com.example.drugmaster.R;
+import com.example.drugmaster.popups.DialogBox;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -55,7 +60,7 @@ public class Druglist extends ArrayAdapter<Drug> {
 
         try {
             change.setOnClickListener(new ChangeListener(drug.clone(),activity));
-            delete.setOnClickListener(new DeleteListener(drug.clone()));
+            delete.setOnClickListener(new DeleteListener(drug.clone(),activity));
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
@@ -111,11 +116,81 @@ public class Druglist extends ArrayAdapter<Drug> {
 
 class DeleteListener implements View.OnClickListener{
     private Drug drug;
-    DeleteListener(Drug deteteById) {
+    private ManagerActivity activity;
+    private ArrayList<OrderStatus> orderStatuses;
+    private ArrayList<Order> orderArrayList;
+    private boolean drugInOrder = false;
+
+    DeleteListener(Drug deteteById,Activity activity) {
+        this.activity = (ManagerActivity) activity;
         this.drug = deteteById;
     }
     @Override
     public void onClick(View v) {
+        try {
+            check();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void check() throws NullPointerException{
+        orderStatuses = new ArrayList<>();
+        orderArrayList = new ArrayList<>();
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("orders").child("managers").child(activity.getUser().getId());
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                orderStatuses.clear();
+                orderArrayList.clear();
+                for (DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    OrderStatus orderStatus = snapshot.getValue(OrderStatus.class);
+                    if(!orderStatus.getStatus().equals("Заказ Создан"))
+                        orderStatuses.add(orderStatus);
+                }
+                readOrders();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void readOrders() {
+        for (final OrderStatus orderStatus : orderStatuses){
+            FirebaseDatabase.getInstance().getReference().child("orders").child("clients").child(orderStatus.getClientID()).child(activity.getUser().getId())
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Order order = dataSnapshot.getValue(Order.class);
+                            orderArrayList.add(order);
+                            if(order.getDrugs().containsKey(drug.getId())){
+                                drugInOrder = true;
+                            }
+                            if(orderStatuses.size() == orderArrayList.size() && !drugInOrder){
+                                deletion();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+            if (drugInOrder){
+                DialogBox dialogBox = new DialogBox(
+                        "Внимание!",
+                        "Это лекарство находится в принятом(ых) заказе(ах), если нужно удалить это лекаство отменяйте в последующих заказах и ждите завершения нынешних!!!"
+                );
+                dialogBox.setMustDestroy(false);
+                dialogBox.show(activity.getSupportFragmentManager(),"example dialog");
+                break;
+            }
+
+        }
+    }
+    private void deletion(){
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().
                 child("drugs").
                 child(Objects.requireNonNull(
@@ -131,15 +206,83 @@ class DeleteListener implements View.OnClickListener{
 
 class ChangeListener implements View.OnClickListener{
     private Drug drug;
-    private Activity activity;
+    private ManagerActivity activity;
+    private ArrayList<OrderStatus> orderStatuses;
+    private ArrayList<Order> orderArrayList;
+    private boolean drugInOrder = false;
+
     ChangeListener(Drug drug, Activity activity) {
         this.drug = drug;
-        this.activity = activity;
+        this.activity = (ManagerActivity) activity;
     }
 
     @Override
     public void onClick(View v) {
-        ManagerActivity managerActivity = (ManagerActivity) activity;
-        Objects.requireNonNull(managerActivity).createPopUpInfoChange(Druglist.DRUGLIST_FRAGMENT_CHANGE,drug);
+        try {
+            check();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void check() throws NullPointerException{
+        orderStatuses = new ArrayList<>();
+        orderArrayList = new ArrayList<>();
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("orders").child("managers").child(activity.getUser().getId());
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                orderStatuses.clear();
+                orderArrayList.clear();
+                for (DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    OrderStatus orderStatus = snapshot.getValue(OrderStatus.class);
+                    if(!orderStatus.getStatus().equals("Заказ Создан"))
+                        orderStatuses.add(orderStatus);
+                }
+                readOrders();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void readOrders() {
+        for (final OrderStatus orderStatus : orderStatuses){
+            FirebaseDatabase.getInstance().getReference().child("orders").child("clients").child(orderStatus.getClientID()).child(activity.getUser().getId())
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Order order = dataSnapshot.getValue(Order.class);
+                            orderArrayList.add(order);
+                            if(order.getDrugs().containsKey(drug.getId())){
+                                drugInOrder = true;
+                            }
+                            if(orderStatuses.size() == orderArrayList.size() && !drugInOrder){
+                                changing();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+            if (drugInOrder){
+                DialogBox dialogBox = new DialogBox(
+                        "Внимание!",
+                        "Это лекарство находится в принятом(ых) заказе(ах), если нужно изменить это лекаство отменяйте в последующих заказах и ждите завершения нынешних!!!"
+                );
+                dialogBox.setMustDestroy(false);
+                dialogBox.show(activity.getSupportFragmentManager(),"example dialog");
+                break;
+            }
+
+        }
+    }
+
+    private void changing() {
+        Objects.requireNonNull(activity).createPopUpInfoChange(Druglist.DRUGLIST_FRAGMENT_CHANGE,drug);
     }
 }

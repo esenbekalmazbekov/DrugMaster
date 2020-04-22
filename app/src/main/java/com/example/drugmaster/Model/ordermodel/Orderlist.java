@@ -42,6 +42,8 @@ public class Orderlist extends ArrayAdapter<Order> {
         LayoutInflater inflater = activity.getLayoutInflater();
 
         @SuppressLint({"ViewHolder", "InflateParams"}) View listViewItem = inflater.inflate(R.layout.basket_list,null,true);
+        ImageButton info = listViewItem.findViewById(R.id.infobtn);
+        info.setVisibility(View.INVISIBLE);
         getManager(listViewItem,position);
         return listViewItem;
     }

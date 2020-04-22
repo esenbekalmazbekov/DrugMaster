@@ -11,9 +11,12 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 public class DialogBox extends AppCompatDialogFragment {
     private String title;
     private String message;
+
+    private boolean mustDestroy;
     public DialogBox(String title, String message) {
         this.title = title;
         this.message = message;
+        mustDestroy = true;
     }
 
     @NonNull
@@ -28,7 +31,12 @@ public class DialogBox extends AppCompatDialogFragment {
 
     @Override
     public void onDestroy() {
-        getActivity().onBackPressed();
+        if(mustDestroy)
+            getActivity().onBackPressed();
         super.onDestroy();
+    }
+
+    public void setMustDestroy(boolean mustDestroy) {
+        this.mustDestroy = mustDestroy;
     }
 }

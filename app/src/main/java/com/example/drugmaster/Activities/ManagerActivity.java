@@ -16,9 +16,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
+import com.example.drugmaster.Model.User;
 import com.example.drugmaster.Model.drugmodel.Drug;
 import com.example.drugmaster.Model.drugmodel.Druglist;
-import com.example.drugmaster.Model.User;
 import com.example.drugmaster.R;
 import com.example.drugmaster.fragments.ClientsFragment;
 import com.example.drugmaster.fragments.InfoFragment;
@@ -89,7 +89,14 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if(!ClientActivity.own){
+                ClientActivity.own = true;
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container,new OrdersFragment())
+                        .commit();
+            }else
+                super.onBackPressed();
         }
     }
 
@@ -166,4 +173,6 @@ public class ManagerActivity extends AppCompatActivity implements NavigationView
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public User getUser(){return user;}
 }
