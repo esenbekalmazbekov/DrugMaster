@@ -71,7 +71,7 @@ public class Druglist extends ArrayAdapter<Drug> {
 
         TextView name = listViewItem.findViewById(R.id.name);
         TextView unit = listViewItem.findViewById(R.id.unit);
-        TextView maker = listViewItem.findViewById(R.id.maker);
+        final TextView maker = listViewItem.findViewById(R.id.maker);
         TextView price = listViewItem.findViewById(R.id.price);
 
         change = listViewItem.findViewById(R.id.change);
@@ -91,10 +91,17 @@ public class Druglist extends ArrayAdapter<Drug> {
             public void onClick(View v) {
                 if(box.isChecked()){
                     order.getDrugs().put(drug.getId(),1);
-                    order.setCost(order.getCost() + Double.parseDouble(drug.getPrice()));
+                    double plus = order.getCost() + Double.parseDouble(drug.getPrice());
+                    int i = (int)(plus * 100);
+                    plus = (double) i / 100;
+                    order.setCost(plus);
                 }else{
+                    double minus = Double.parseDouble(drug.getPrice()) * order.getDrugs().get(drug.getId());
+                    minus = order.getCost() - minus;
+                    int i = (int)(minus * 100);
+                    minus = (double) i / 100;
+                    order.setCost(minus);
                     order.getDrugs().remove(drug.getId());
-                    order.setCost(order.getCost() - Double.parseDouble(drug.getPrice()));
                 }
             }
         });
