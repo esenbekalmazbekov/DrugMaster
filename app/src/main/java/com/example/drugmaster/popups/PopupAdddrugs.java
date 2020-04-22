@@ -11,22 +11,33 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.drugmaster.Activities.ManagerActivity;
 import com.example.drugmaster.Model.drugmodel.Drug;
+import com.example.drugmaster.Model.ordermodel.Order;
+import com.example.drugmaster.Model.ordermodel.OrderStatus;
 import com.example.drugmaster.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class PopupAdddrugs extends AppCompatActivity {
-    EditText name, maker, price;
-    Spinner unit;
-    Button save,cancel;
-    Drug newdrug;
+    private EditText name, maker, price;
+    private Spinner unit;
+    private Button save,cancel;
+    private Drug newdrug;
+    private String userID;
+    private String drugID;
+    private Double drugOldPrice;
+    private ArrayList<OrderStatus> activated;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +49,8 @@ public class PopupAdddrugs extends AppCompatActivity {
         if(getIntent().getIntExtra("type",1) == ManagerActivity.CHANGE){
             newdrug = getIntent().getParcelableExtra("drug");
             if (newdrug != null) {
+                drugID  = newdrug.getId();
+                drugOldPrice = Double.parseDouble(newdrug.getPrice());
                 name.setText(newdrug.getName());
                 for (int i = 0;i < 4;i++){
                     if(unit.getItemAtPosition(i).toString().equals(newdrug.getUnit()))
@@ -83,10 +96,15 @@ public class PopupAdddrugs extends AppCompatActivity {
             newdrug.setUnit(unit.getSelectedItem().toString());
             newdrug.setMaker(maker.getText().toString());
             newdrug.setPrice(price.getText().toString());
-
-            db.child(Objects.requireNonNull(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName())).child(newdrug.getId()).setValue(newdrug);
+            userID = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+            db.child(userID).child(newdrug.getId()).setValue(newdrug);
             showMessage("лекарство добавлено!");
-            finish();
+
+            try{
+                check();
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
         }else
             showMessage("Есть пустые поля!!!");
     }
@@ -112,13 +130,70 @@ public class PopupAdddrugs extends AppCompatActivity {
                     unit.getSelectedItem().toString(),
                     maker.getText().toString(),
                     price.getText().toString());
-
-            db.child(Objects.requireNonNull(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName())).child(newdrug.getId()).setValue(newdrug);
+            userID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getDisplayName();
+            db.child(userID).child(newdrug.getId()).setValue(newdrug);
             showMessage("лекарство добавлено!");
             finish();
         }else
             showMessage("Есть пустые поля!!!");
     }
+
+    private void check() throws NullPointerException {
+        activated = new ArrayList<>();
+        FirebaseDatabase.getInstance().getReference().child("orders").child("managers")
+                .child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                activated.clear();
+                for (DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    OrderStatus orderStatus = snapshot.getValue(OrderStatus.class);
+                    if(orderStatus.getStatus().equals("Заказ Создан"))
+                        activated.add(orderStatus);
+                }
+                if(activated.size() == 0){
+                    finish();
+                }
+                else
+                    deletion();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void deletion() throws NullPointerException{
+        for (final OrderStatus orderStatus : activated) {
+            FirebaseDatabase.getInstance().getReference().child("orders").child("clients").child(orderStatus.getClientID()).child(userID)
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Order order = dataSnapshot.getValue(Order.class);
+                            if (order.getDrugs().containsKey(drugID)) {
+                                double minus = drugOldPrice * order.getDrugs().get(drugID);
+                                int i = (int) (minus * 100);
+                                minus = (double) i / 100;
+                                minus = order.getCost() - minus;
+                                i = (int) (minus * 100);
+                                minus = (double) i / 100;
+                                order.setCost(minus);
+                                order.getDrugs().remove(drugID);
+                                FirebaseDatabase.getInstance().getReference().child("orders").child("clients").child(orderStatus.getClientID()).child(userID).setValue(order);
+                            }
+                            if(activated.indexOf(orderStatus) == activated.size() - 1)
+                                finish();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+    }
+
     private void showMessage(String str){
         Toast.makeText(this,str,Toast.LENGTH_LONG).show();
     }

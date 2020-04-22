@@ -114,41 +114,51 @@ public class Druglist extends ArrayAdapter<Drug> {
     }
 }
 
-class DeleteListener implements View.OnClickListener{
+
+class DeleteListener implements View.OnClickListener {
     private Drug drug;
     private ManagerActivity activity;
     private ArrayList<OrderStatus> orderStatuses;
     private ArrayList<Order> orderArrayList;
+    private ArrayList<OrderStatus> activated;
     private boolean drugInOrder = false;
 
-    DeleteListener(Drug deteteById,Activity activity) {
+    DeleteListener(Drug deteteById, Activity activity) {
         this.activity = (ManagerActivity) activity;
         this.drug = deteteById;
     }
+
     @Override
     public void onClick(View v) {
         try {
             check();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-    private void check() throws NullPointerException{
+    private void check() throws NullPointerException {
         orderStatuses = new ArrayList<>();
         orderArrayList = new ArrayList<>();
+        activated = new ArrayList<>();
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("orders").child("managers").child(activity.getUser().getId());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 orderStatuses.clear();
                 orderArrayList.clear();
-                for (DataSnapshot snapshot:dataSnapshot.getChildren()){
+                activated.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     OrderStatus orderStatus = snapshot.getValue(OrderStatus.class);
-                    if(!orderStatus.getStatus().equals("Заказ Создан"))
+                    if (!orderStatus.getStatus().equals("Заказ Создан"))
                         orderStatuses.add(orderStatus);
+                    else
+                        activated.add(orderStatus);
                 }
-                readOrders();
+                if (orderStatuses.size() == 0)
+                    deletion();
+                else
+                    readOrders();
             }
 
             @Override
@@ -157,18 +167,19 @@ class DeleteListener implements View.OnClickListener{
             }
         });
     }
+
     private void readOrders() {
-        for (final OrderStatus orderStatus : orderStatuses){
+        for (final OrderStatus orderStatus : orderStatuses) {
             FirebaseDatabase.getInstance().getReference().child("orders").child("clients").child(orderStatus.getClientID()).child(activity.getUser().getId())
-                    .addValueEventListener(new ValueEventListener() {
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             Order order = dataSnapshot.getValue(Order.class);
                             orderArrayList.add(order);
-                            if(order.getDrugs().containsKey(drug.getId())){
+                            if (order.getDrugs().containsKey(drug.getId())) {
                                 drugInOrder = true;
                             }
-                            if(orderStatuses.size() == orderArrayList.size() && !drugInOrder){
+                            if (orderStatuses.size() == orderArrayList.size() && !drugInOrder) {
                                 deletion();
                             }
                         }
@@ -178,19 +189,21 @@ class DeleteListener implements View.OnClickListener{
 
                         }
                     });
-            if (drugInOrder){
+            if (drugInOrder) {
                 DialogBox dialogBox = new DialogBox(
                         "Внимание!",
                         "Это лекарство находится в принятом(ых) заказе(ах), если нужно удалить это лекаство отменяйте в последующих заказах и ждите завершения нынешних!!!"
                 );
                 dialogBox.setMustDestroy(false);
-                dialogBox.show(activity.getSupportFragmentManager(),"example dialog");
+                dialogBox.show(activity.getSupportFragmentManager(), "example dialog");
                 break;
             }
 
         }
     }
-    private void deletion(){
+
+    private void deletion() {
+        final String drugID = drug.getId();
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().
                 child("drugs").
                 child(Objects.requireNonNull(
@@ -199,10 +212,37 @@ class DeleteListener implements View.OnClickListener{
                                 getCurrentUser()
                         ).getDisplayName())
                 ).child(drug.getId());
-
         db.removeValue();
+        if (activated.size() != 0) {
+            for (final OrderStatus orderStatus : activated) {
+                FirebaseDatabase.getInstance().getReference().child("orders").child("clients").child(orderStatus.getClientID()).child(activity.getUser().getId())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Order order = dataSnapshot.getValue(Order.class);
+                                if (order.getDrugs().containsKey(drugID)) {
+                                    double minus = Double.parseDouble(drug.getPrice()) * order.getDrugs().get(drugID);
+                                    int i = (int) (minus * 100);
+                                    minus = (double) i / 100;
+                                    minus = order.getCost() - minus;
+                                    i = (int) (minus * 100);
+                                    minus = (double) i / 100;
+                                    order.setCost(minus);
+                                    order.getDrugs().remove(drugID);
+                                    FirebaseDatabase.getInstance().getReference().child("orders").child("clients").child(orderStatus.getClientID()).child(activity.getUser().getId()).setValue(order);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        }
     }
 }
+
 
 class ChangeListener implements View.OnClickListener{
     private Drug drug;
@@ -229,7 +269,7 @@ class ChangeListener implements View.OnClickListener{
         orderStatuses = new ArrayList<>();
         orderArrayList = new ArrayList<>();
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("orders").child("managers").child(activity.getUser().getId());
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 orderStatuses.clear();
@@ -239,7 +279,10 @@ class ChangeListener implements View.OnClickListener{
                     if(!orderStatus.getStatus().equals("Заказ Создан"))
                         orderStatuses.add(orderStatus);
                 }
-                readOrders();
+                if(orderStatuses.size() == 0)
+                    changing();
+                else
+                    readOrders();
             }
 
             @Override
@@ -251,7 +294,7 @@ class ChangeListener implements View.OnClickListener{
     private void readOrders() {
         for (final OrderStatus orderStatus : orderStatuses){
             FirebaseDatabase.getInstance().getReference().child("orders").child("clients").child(orderStatus.getClientID()).child(activity.getUser().getId())
-                    .addValueEventListener(new ValueEventListener() {
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             Order order = dataSnapshot.getValue(Order.class);
