@@ -114,7 +114,7 @@ public class Registration extends AppCompatActivity{
                     goToRegistration();
                 }
                 else {
-                    showMessage("Неверный код регистра");
+                    showMessage(key);
                     submit.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
                 }
