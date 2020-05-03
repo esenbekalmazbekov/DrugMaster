@@ -48,6 +48,7 @@
     <string name="orderlist">Список заказа:</string>
     <string name="close">Закрыть</string>
     <string name="_1">1</string>
+    <string name="drugNotFound">Лекарство не найдено</string>
 
     <array name="unit">
         <item>Упаковка</item>

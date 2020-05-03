@@ -4,7 +4,7 @@ public class OrderStatus {
     private String clientID;
     private String status;
 
-    OrderStatus(String clientID, String status) {
+    public OrderStatus(String clientID, String status) {
         this.clientID = clientID;
         this.status = status;
     }
