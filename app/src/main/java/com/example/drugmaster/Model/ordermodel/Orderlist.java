@@ -203,7 +203,7 @@ public class Orderlist extends ArrayAdapter<Order> {
                                 child(client.getId()).setValue(newStatus);
                     }
                 });
-                status.setTextColor(Color.YELLOW);
+                status.setTextColor(Color.parseColor("#ff5100"));
                 status.setText("Ждите поставку");
             }break;
             case "Заказ Получен":{

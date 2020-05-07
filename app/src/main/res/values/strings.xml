@@ -17,7 +17,7 @@
     <string name="info">Инфо</string>
     <string name="list">Список</string>
     <string name="orders">Заказы</string>
-    <string name="clients">Клиенты</string>
+    <string name="archive">Архив</string>
     <string name="other">Другое</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

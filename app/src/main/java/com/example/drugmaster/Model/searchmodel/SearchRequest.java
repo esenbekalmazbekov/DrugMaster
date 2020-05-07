@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.drugmaster.Model.User;
 import com.example.drugmaster.Model.drugmodel.Drug;
@@ -23,7 +22,7 @@ public class SearchRequest {
     private Activity activity;
     private User client;
 
-    public SearchRequest(ListView searchlist, FragmentActivity activity,User client) {
+    public SearchRequest(ListView searchlist, Activity activity,User client) {
         listView = searchlist;
         this.activity = activity;
         this.client = client;

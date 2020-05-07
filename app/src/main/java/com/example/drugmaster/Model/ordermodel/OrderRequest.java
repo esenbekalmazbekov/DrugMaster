@@ -30,6 +30,7 @@ public class OrderRequest {
         manager = activity.getIntent().getParcelableExtra("managerdata");
         client = activity.getIntent().getParcelableExtra("userdata");
     }
+
     public OrderRequest(Activity activity,ListView drugView){
         this.activity = activity;
         this.drugView = drugView;

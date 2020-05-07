@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,14 +20,22 @@ import com.example.drugmaster.Activities.ClientActivity;
 import com.example.drugmaster.Activities.ManagerActivity;
 import com.example.drugmaster.Activities.RefactorActivty;
 import com.example.drugmaster.Model.User;
+import com.example.drugmaster.Model.achivemodel.Archive;
+import com.example.drugmaster.Model.achivemodel.ArchiveResponse;
+import com.example.drugmaster.Model.drugmodel.DrugRequest;
 import com.example.drugmaster.R;
 import com.example.drugmaster.fragments.InfoFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class OrderlistForManager extends ArrayAdapter<Order> {
@@ -180,28 +189,27 @@ public class OrderlistForManager extends ArrayAdapter<Order> {
                 requrest.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        orders.get(position).setStatus("Заказ Оплачен");
-                        deleteOrder.setVisibility(View.INVISIBLE);
                         requrest.setVisibility(View.INVISIBLE);
+                        status.setText("Добавлено в архив");
+                        status.setTextColor(Color.DKGRAY);
                         FirebaseDatabase.getInstance().getReference().
                                 child("orders").child("clients").
                                 child(client.getId()).
-                                child(manager.getId()).setValue(orders.get(position));
-
-                        OrderStatus newStatus = new OrderStatus(client.getId(),orders.get(position).getStatus());
+                                child(manager.getId()).removeValue();
 
                         FirebaseDatabase.getInstance().getReference().
                                 child("orders").child("managers").
                                 child(manager.getId()).
-                                child(client.getId()).setValue(newStatus);
+                                child(client.getId()).removeValue();
+
+
+                        ArchiveResponse archiveResponse = new ArchiveResponse(client,manager,orders.get(position));
+                        archiveResponse.response();
+
                     }
                 });
-                status.setTextColor(Color.YELLOW);
+                status.setTextColor(Color.parseColor("#ff5100"));
                 status.setText("Ждите оплату");
-            }break;
-            case "Заказ Оплачен":{
-                status.setTextColor(Color.DKGRAY);
-                status.setText("Заказ Оплачен");
             }break;
             case "Заказ Отменен":{
                 final Button deleteOrder = view.findViewById(R.id.delete);
