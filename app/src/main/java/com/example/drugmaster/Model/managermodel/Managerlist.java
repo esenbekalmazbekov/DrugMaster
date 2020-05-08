@@ -45,9 +45,11 @@ public class Managerlist extends ArrayAdapter<User> {
 
         ImageButton info = listViewItem.findViewById(R.id.infobtn);
         ImageButton data = listViewItem.findViewById(R.id.databtn);
+        ImageButton archive = listViewItem.findViewById(R.id.archive);
 
         info.setOnClickListener(new ImageBtnListerer(activity,"info",user));
         data.setOnClickListener(new ImageBtnListerer(activity,"data",user));
+        archive.setOnClickListener(new ImageBtnListerer(activity,"archive",user));
         return listViewItem;
     }
 

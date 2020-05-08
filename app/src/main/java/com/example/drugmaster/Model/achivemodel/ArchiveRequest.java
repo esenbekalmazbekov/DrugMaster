@@ -41,6 +41,7 @@ public class ArchiveRequest {
                 }
                 if (archives.size() > 0)
                     ClientsFragment.getNotFound().setVisibility(View.INVISIBLE);
+                ClientsFragment.getBar().setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -63,6 +64,7 @@ public class ArchiveRequest {
                     arcList.setAdapter(new ArchiveList(activity,archives,isManager));
                 }
                 ClientsFragment.getNotFound().setVisibility(View.INVISIBLE);
+                ClientsFragment.getBar().setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -74,5 +76,31 @@ public class ArchiveRequest {
 
     private DatabaseReference db(){
         return FirebaseDatabase.getInstance().getReference("archive");
+    }
+
+    public void requestByID(String managerID,String clientID) {
+        archives.clear();
+        Query query = db().child(managerID).orderByChild("clientID").equalTo(clientID);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot d : dataSnapshot.getChildren()){
+                    Archive archive = d.getValue(Archive.class);
+                    archives.add(archive);
+                    arcList.setAdapter(new ArchiveList(activity,archives,isManager));
+                }
+                if (archives.size() > 0)
+                    ClientsFragment.getNotFound().setVisibility(View.INVISIBLE);
+
+                ClientsFragment.getBar().setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        ClientsFragment.getNotFound().setVisibility(View.VISIBLE);
+        arcList.setAdapter(new ArchiveList(activity,archives,isManager));
     }
 }

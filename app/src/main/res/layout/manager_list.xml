@@ -45,6 +45,17 @@
             android:layout_gravity="bottom">
 
             <ImageButton
+                android:id="@+id/archive"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="15dp"
+                android:background="#04bf33"
+                android:layout_gravity="bottom"
+                app:srcCompat="@drawable/ic_orders"
+                android:layout_marginTop="15dp"
+                android:contentDescription="@string/search" />
+
+            <ImageButton
                 android:id="@+id/infobtn"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
@@ -60,11 +71,11 @@
                 android:layout_width="40dp"
                 android:layout_height="35dp"
                 android:layout_marginEnd="15dp"
-                android:background="#1100ff"
                 android:foregroundGravity="right"
+                app:srcCompat="@drawable/ic_list"
+                android:background="#1100ff"
                 android:layout_gravity="bottom"
-                android:contentDescription="@string/search"
-                app:srcCompat="@drawable/ic_list" />
+                android:contentDescription="@string/search" />
 
         </LinearLayout>
 

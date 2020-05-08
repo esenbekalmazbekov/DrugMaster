@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.example.drugmaster.Model.User;
 import com.example.drugmaster.R;
 import com.example.drugmaster.fragments.BasketFragment;
+import com.example.drugmaster.fragments.ClientsFragment;
 import com.example.drugmaster.fragments.InfoFragment;
 import com.example.drugmaster.fragments.ListFragment;
 import com.example.drugmaster.fragments.ManagerFragment;
@@ -34,7 +35,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ClientActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     Toolbar toolbar;
     private DrawerLayout drawer;
-    private User user;
+    private static User user;
     public static boolean own = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,10 +119,15 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
                     .beginTransaction()
                     .replace(R.id.fragment_container_client,new InfoFragment())
                     .commit();
-        }else {
+        }else if(fragment.equals("data")){
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container_client,new ListFragment())
+                    .commit();
+        }else {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container_client,new ClientsFragment())
                     .commit();
         }
     }
@@ -164,5 +170,9 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public static User getUser() {
+        return user;
     }
 }

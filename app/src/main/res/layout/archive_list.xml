@@ -28,11 +28,11 @@
             android:layout_width="40dp"
             android:layout_height="35dp"
             android:layout_marginEnd="15dp"
-            android:background="#1100ff"
+            android:background="#04bf33"
             android:foregroundGravity="right"
             android:layout_gravity="bottom"
             android:contentDescription="@string/search"
-            app:srcCompat="@drawable/ic_list" />
+            app:srcCompat="@drawable/ic_orders" />
     </LinearLayout>
 
     <TextView

@@ -51,16 +51,20 @@ public class ArchiveList extends ArrayAdapter<Archive> {
         if(inManager){
             firmname.setText(archives.get(pos).getClOrgName());
             userEmail.setText(archives.get(pos).getClientEmail());
-            date.setText(archives.get(pos).getDate());
-            price.setText(archives.get(pos).getPrice()+"сом");
-            dbn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(activity, ArchivePupups.class);
-                    intent.putParcelableArrayListExtra("drugs",archives.get(pos).getList());
-                    activity.startActivity(intent);
-                }
-            });
+        }else {
+            firmname.setText(archives.get(pos).getManagerName());
+            userEmail.setText(archives.get(pos).getManagerEmail());
         }
+
+        date.setText(archives.get(pos).getDate());
+        price.setText(archives.get(pos).getPrice()+"сом");
+        dbn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, ArchivePupups.class);
+                intent.putParcelableArrayListExtra("drugs",archives.get(pos).getList());
+                activity.startActivity(intent);
+            }
+        });
     }
 }
