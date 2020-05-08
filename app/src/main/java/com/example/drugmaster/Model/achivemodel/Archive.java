@@ -25,6 +25,7 @@ public class Archive {
         this.date = date;
         this.price = price;
     }
+    Archive(){}
 
     public String getPrice() {
         return price;

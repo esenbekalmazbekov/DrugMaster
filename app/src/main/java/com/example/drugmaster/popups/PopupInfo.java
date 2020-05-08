@@ -92,7 +92,6 @@ public class PopupInfo extends AppCompatActivity {
         params.y = -20;
 
         getWindow().setAttributes(params);
-
     }
 
 

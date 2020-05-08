@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:dist="http://schemas.android.com/apk/distribution"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.drugmaster">
 
     <dist:module dist:instant="true" />
@@ -22,9 +22,14 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:theme="@style/AppTheme.NoActionBar"
+            android:name=".popups.ArchivePupups"
+            android:theme="@style/AppTheme.PopMe">
+
+        </activity>
+        <activity
             android:name=".Activities.RefactorActivty"
-            tools:ignore="InnerclassSeparator"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".popups.PopupAdddrugs"
             android:theme="@style/AppTheme.PopMe" />

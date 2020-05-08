@@ -49,6 +49,7 @@
     <string name="close">Закрыть</string>
     <string name="_1">1</string>
     <string name="drugNotFound">Лекарство не найдено</string>
+    <string name="spisok">Список</string>
 
     <array name="unit">
         <item>Упаковка</item>
