@@ -1,6 +1,8 @@
 package com.example.drugmaster.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -131,6 +133,7 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
                     .commit();
         }
     }
+    @SuppressLint("IntentReset")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         own = true;
@@ -159,9 +162,17 @@ public class ClientActivity extends AppCompatActivity implements NavigationView.
                         .replace(R.id.fragment_container_client,new BasketFragment())
                         .commit();
                 break;
-            case R.id.nav_complaint:
-                Toast.makeText(this,"complaint",Toast.LENGTH_LONG).show();
-                break;
+            case R.id.nav_complaint:{
+
+                Intent mEmailIntent = new Intent(Intent.ACTION_SEND);
+                mEmailIntent.setData(Uri.parse("mailto:"));
+                mEmailIntent.setType("text/plain");
+                mEmailIntent.putExtra(Intent.EXTRA_EMAIL,new String[]{"esenbek.almazbekov@gmail.com"});
+                mEmailIntent.putExtra(Intent.EXTRA_SUBJECT,"Хотел(а) бы пожаловаться");
+
+                startActivity(Intent.createChooser(mEmailIntent,"Выберите mail.ru или gmail.com"));
+            }
+            break;
             case R.id.nav_singout:
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(ClientActivity.this,MainActivity.class));
